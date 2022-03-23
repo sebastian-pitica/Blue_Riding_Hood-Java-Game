@@ -1,4 +1,4 @@
 package BlueRidingHood.InputManager;
 
-public class MouseInput {
+public class MouseInputManager {
 }
