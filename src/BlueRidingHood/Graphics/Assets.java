@@ -71,21 +71,7 @@ public class Assets {
     public static BufferedImage[] wolfUp = new BufferedImage[4];
     public static BufferedImage[] wolfDown = new BufferedImage[4];
 
-
-    /* public static BufferedImage soil;
-    public static BufferedImage grass;
-    public static BufferedImage mountain;
-    public static BufferedImage townGrass;
-    public static BufferedImage townGrassDestroyed;
-    public static BufferedImage townSoil;
-    public static BufferedImage water;
-    public static BufferedImage rockUp;
-    public static BufferedImage rockDown;
-    public static BufferedImage rockLeft;
-    public static BufferedImage rockRight;
-    public static BufferedImage tree;
-*/
-
+    
     /*! \fn public static void Init()
         \brief Functia initializaza referintele catre elementele grafice utilizate.
 
@@ -105,6 +91,9 @@ public class Assets {
         SpriteSheet zaWalfo = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/zawalfo.png"));
         SpriteSheet wolf = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/garda.png"));
 
+        // TODO: 23.03.2022 butoane 
+        // TODO: 23.03.2022 atac foc gheata 
+        
         maps[0] = ImageLoader.LoadImage("/textures/map/firstmap2.png");
         maps[1] = ImageLoader.LoadImage("/textures/map/secondmap2.png");
 
@@ -250,21 +239,7 @@ public class Assets {
 
         }
 
-
-        /// Se obtin subimaginile corespunzatoare elementelor necesare.
-        /*grass = sheet.crop(0, 0);
-        soil = sheet.crop(1, 0);
-        water = sheet.crop(2, 0);
-        mountain = getFlippedImage(water);
-        townGrass = sheet.crop(0, 1);
-        townGrassDestroyed = sheet.crop(1, 1);
-        townSoil = sheet.crop(2, 1);
-        tree = sheet.crop(3, 1);
-        rockUp = sheet.crop(2, 2);
-        rockDown = sheet.crop(3, 2);
-        rockLeft = sheet.crop(0, 3);
-        rockRight = sheet.crop(1, 3);
-    */}
+    }
 
     public static BufferedImage getFlippedImage(BufferedImage image) {
         BufferedImage flipped = new BufferedImage(
