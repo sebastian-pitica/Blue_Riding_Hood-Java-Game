@@ -150,6 +150,7 @@ public class Assets {
         }
         //zawalfo&wolf
         {
+            i=0;
             for(int j=0;j<3;++j)
             {
                 zaWalfoDown[j] = zaWalfo.crop(j,i,32,32);
@@ -180,6 +181,7 @@ public class Assets {
         }
         //fox1&2
         {
+            i=0;
             for(int j=0;j<2;++j)
             {
                 fox1Down[j] = fox1.crop(j,i,48,32);
@@ -210,6 +212,7 @@ public class Assets {
         }
         //bear1&2
         {
+            i=0;
             for(int j=0;j<2;++j)
             {
                 bear1Down[j] = bear1.crop(j,i,64,48);
