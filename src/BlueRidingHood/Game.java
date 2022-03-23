@@ -214,14 +214,14 @@ public class Game implements Runnable {
 
         /// operatie de desenare
         // ...............
-        int a = Assets.map2.getWidth();
-        int b = Assets.map2.getHeight();
-        int c = Assets.map1.getWidth();
-        int d = Assets.map1.getHeight();
+        int a = Assets.maps[1].getWidth();
+        int b = Assets.maps[1].getHeight();
+        int c = Assets.maps[0].getWidth();
+        int d = Assets.maps[0].getHeight();
         g.drawRect(0,0,1440,768);
         g.setColor(Color.black);
         g.fillRect(0,0,1440,768);
-        g.drawImage(Assets.map1, 0, 0,1440, 768, null);
+        g.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
         g.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
 
 
