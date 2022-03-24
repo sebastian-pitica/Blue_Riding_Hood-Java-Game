@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 /*! \class public class Tile
     \brief Retine toate dalele intr-un vector si ofera posibilitatea regasirii dupa un id.
  */
-public class Tile {
+public class Tile { // TODO: 24.03.2022
     public static final int TILE_WIDTH = 48;                       /*!< Latimea unei dale.*/
     public static final int TILE_HEIGHT = 48;                       /*!< Inaltimea unei dale.*/
     private static final int NO_TILES = 32;

@@ -1,4 +1,4 @@
 package BlueRidingHood.Entities;
 
-public class Player {
+public class Player {// TODO: 24.03.2022
 }

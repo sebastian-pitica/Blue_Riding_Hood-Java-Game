@@ -1,4 +1,4 @@
 package BlueRidingHood.Entities;
 
-public class ZaWalfo {
+public class ZaWalfo {// TODO: 24.03.2022
 }
