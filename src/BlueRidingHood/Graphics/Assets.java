@@ -97,7 +97,7 @@ public class Assets {
         maps[0] = ImageLoader.LoadImage("/textures/map/firstmap2.png");
         maps[1] = ImageLoader.LoadImage("/textures/map/secondmap2.png");
 
-        int i=0;
+        int i=0;  //TODO vezi daca aici iti incarca sprite urile posibil de la acolade sa nu
         //player
         {
             for (int j = 0; j < 4; ++j, ++i) {
@@ -245,19 +245,15 @@ public class Assets {
     }
 
     public static BufferedImage getFlippedImage(BufferedImage image) {
-        BufferedImage flipped = new BufferedImage(
-                image.getWidth(),
-                image.getHeight(),
-                image.getType());
+        BufferedImage flipped = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         AffineTransform tran = AffineTransform.getTranslateInstance(image.getWidth(), 0);
         AffineTransform flip = AffineTransform.getScaleInstance(-1d, 1d);
         tran.concatenate(flip);
-
         Graphics2D g = flipped.createGraphics();
         g.setTransform(tran);
         g.drawImage(image, 0, 0, null);
         g.dispose();
-
         return flipped;
+        //https://tousu.in/qa/?qa=1154932/
     }
 }

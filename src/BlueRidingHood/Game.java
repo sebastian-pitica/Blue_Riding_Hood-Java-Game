@@ -115,7 +115,7 @@ public class Game implements Runnable {
 
         /// Atat timp timp cat threadul este pornit Update() & Draw()
         int i=0;
-        while (runState == true) {
+        while (runState == true) { // TODO: 24.03.2022
             /// Se obtine timpul curent
             curentTime = System.nanoTime();
             /// Daca diferenta de timp dintre curentTime si oldTime mai mare decat 16.6 ms
@@ -211,6 +211,9 @@ public class Game implements Runnable {
 
         /// operatie de desenare
         // ...............
+
+        // TODO: 24.03.2022!!!!!!
+
         int a = Assets.maps[1].getWidth();
         int b = Assets.maps[1].getHeight();
         int c = Assets.maps[0].getWidth();
