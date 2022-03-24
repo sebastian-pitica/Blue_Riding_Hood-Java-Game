@@ -2,18 +2,37 @@ package BlueRidingHood;
 
 public class Map  {
 
-    public static Map map1 = new Map(1);
-    public static Map map2 = new Map(2);
+    public static final Map map1 = new Map(1);
+    public static final Map map2 = new Map(2);
 
     private int[][] matrix = new int[32][60];
+    private final int mapNr;
 
     boolean canAdvance(int rand, int coloana)
     {
         return matrix[rand][coloana] == 1;
     }
 
-    private Map(int mapNumber) {
+    boolean canKill(int rand, int coloana)
+    {
+        return matrix[rand][coloana] == 3;
+    }
 
+    boolean end(int rand, int coloana)
+    {
+        if(mapNr == 1)
+        {
+            return rand==14;
+        }
+        else
+        {
+            return rand==12;
+        }
+
+    }
+
+    private Map(int mapNumber) {
+        this.mapNr = mapNumber;
         if(mapNumber ==1) {
             int[][] matrix = {
                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
