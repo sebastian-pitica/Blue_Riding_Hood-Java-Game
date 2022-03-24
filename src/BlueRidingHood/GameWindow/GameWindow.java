@@ -1,5 +1,7 @@
 package BlueRidingHood.GameWindow;
 
+import BlueRidingHood.InputManager.KeyboardInputManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,11 +12,12 @@ import java.awt.*;
     ferestre grafice si totodata si cea a unui container (toate elementele
     grafice vor fi continute de fereastra).
  */
-public class GameWindow {
-    private JFrame wndFrame;       /*!< fereastra principala a jocului*/
-    private final String wndTitle;       /*!< titlul ferestrei*/
-    private final int wndWidth;       /*!< latimea ferestrei in pixeli*/
-    private final int wndHeight;      /*!< inaltimea ferestrei in pixeli*/
+public class GameWindow { //todo keylistener
+    public JFrame windowFrame;       /*!< fereastra principala a jocului*///todo
+    private final String windowTitle;       /*!< titlul ferestrei*/
+    private final int windowWidth;       /*!< latimea ferestrei in pixeli*/
+    private final int windowHeight;      /*!< inaltimea ferestrei in pixeli*/
+    public KeyboardInputManager keyboardInputManager;
 
     private Canvas canvas;         /*!< "panza/tablou" in care se poate desena*/
 
@@ -31,10 +34,10 @@ public class GameWindow {
             \param height Inaltimea ferestrei in pixeli.
          */
     public GameWindow() {
-        wndTitle = "BlueRidingHood";    /*!< Retine titlul ferestrei.*/
-        wndWidth = 1440;    /*!< Retine latimea ferestrei.*/
-        wndHeight = 768;   /*!< Retine inaltimea ferestrei.*/
-        wndFrame = null;     /*!< Fereastra nu este construita.*/
+        windowTitle = "BlueRidingHood";    /*!< Retine titlul ferestrei.*/
+        windowWidth = 1440;    /*!< Retine latimea ferestrei.*/
+        windowHeight = 768;   /*!< Retine inaltimea ferestrei.*/
+        windowFrame = null;     /*!< Fereastra nu este construita.*/
     }
 
     /*! \fn private void BuildGameWindow()
@@ -46,31 +49,36 @@ public class GameWindow {
     public void BuildGameWindow() {
         /// Daca fereastra a mai fost construita intr-un apel anterior
         /// se renunta la apel
-        if (wndFrame != null) {
+        if (windowFrame != null) {
             return;
         }
         /// Aloca memorie pentru obiectul de tip fereastra si seteaza denumirea
         /// ce apare in bara de titlu
-        wndFrame = new JFrame(wndTitle);
+        windowFrame = new JFrame(windowTitle);
         /// Seteaza dimensiunile ferestrei in pixeli
-        wndFrame.setSize(wndWidth, wndHeight);
+        windowFrame.setSize(windowWidth, windowHeight);
         /// Operatia de inchidere (fereastra sa poata fi inchisa atunci cand
         /// este apasat butonul x din dreapta sus al ferestrei). Totodata acest
         /// lucru garanteaza ca nu doar fereastra va fi inchisa ci intregul
         /// program
-        wndFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        windowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         /// Avand in vedere ca dimensiunea ferestrei poate fi modificata
         /// si corespunzator continutul actualizat (aici ma refer la dalele
         /// randate) va recomand sa constrangeti deocamdata jucatorul
         /// sa se joace in fereastra stabilitata de voi. Puteti reveni asupra
         /// urmatorului apel ulterior.
-        wndFrame.setResizable(false);
+        windowFrame.setResizable(false);
         /// Recomand ca fereastra sa apara in centrul ecranului. Pentru orice
         /// alte pozitie se va apela "wndFrame.setLocation(x, y)" etc.
-        wndFrame.setLocationRelativeTo(null);
+        windowFrame.setLocationRelativeTo(null);
         /// Implicit o fereastra cand este creata nu este vizibila motiv pentru
         /// care trebuie setata aceasta proprietate
-        wndFrame.setVisible(true);
+        windowFrame.setVisible(true);
+
+        keyboardInputManager = new KeyboardInputManager();
+
+        windowFrame.addKeyListener(keyboardInputManager);
+        windowFrame.setFocusable(true);
 
         /// Creaza obiectul de tip canvas (panza) pe care se poate desena.
         canvas = new Canvas();
@@ -81,31 +89,31 @@ public class GameWindow {
         /// Functia primeste ca parametru un obiect de tip Dimension ca incapsuleaza
         /// doua proprietati: latime si inaltime. Cum acest obiect nu exista
         /// a fost creat unul si dat ca parametru.
-        canvas.setPreferredSize(new Dimension(wndWidth, wndHeight));
+        canvas.setPreferredSize(new Dimension(windowWidth, windowHeight));
         /// Avand in vedere ca elementele unei ferestre pot fi scalate atunci cand
         /// fereastra este redimensionata
-        canvas.setMaximumSize(new Dimension(wndWidth, wndHeight));
-        canvas.setMinimumSize(new Dimension(wndWidth, wndHeight));
+        canvas.setMaximumSize(new Dimension(windowWidth, windowHeight));
+        canvas.setMinimumSize(new Dimension(windowWidth, windowHeight));
         /// Avand in vedere ca obiectul de tip canvas, proaspat creat, nu este automat
         /// adaugat in fereastra trebuie apelata metoda add a obiectul wndFrame
-        wndFrame.add(canvas);
+        windowFrame.add(canvas);
         /// Urmatorul apel de functie are ca scop eventuala redimensionare a ferestrei
         /// ca tot ce contine sa poate fi afisat complet
-        wndFrame.pack();
+        windowFrame.pack();
     }
 
     /*! \fn public int GetWndWidth()
         \brief Returneaza latimea ferestrei.
      */
     public int GetWndWidth() {
-        return wndWidth;
+        return windowWidth;
     }
 
     /*! \fn public int GetWndWidth()
         \brief Returneaza inaltimea ferestrei.
      */
     public int GetWndHeight() {
-        return wndHeight;
+        return windowHeight;
     }
 
     /*! \fn public int GetCanvas()

@@ -7,6 +7,8 @@ import BlueRidingHood.Tiles.Tile;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
+import static BlueRidingHood.Graphics.Assets.test;
+
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
 
@@ -41,10 +43,10 @@ import java.awt.image.BufferStrategy;
         - public synchronized void stop()   //metoda publica de oprire a jocului
  */
 public class Game implements Runnable {
-    private GameWindow wnd;        /*!< Fereastra in care se va desena tabla jocului*/
+    private GameWindow window;        /*!< Fereastra in care se va desena tabla jocului*/
     private boolean runState;   /*!< Flag ce starea firului de executie.*/
     private Thread gameThread; /*!< Referinta catre thread-ul de update si draw al ferestrei*/
-    private BufferStrategy bs;         /*!< Referinta catre un mecanism cu care se organizeaza memoria complexa pentru un canvas.*/
+    private BufferStrategy bufferStrategy;         /*!< Referinta catre un mecanism cu care se organizeaza memoria complexa pentru un canvas.*/
     /// Sunt cateva tipuri de "complex buffer strategies", scopul fiind acela de a elimina fenomenul de
     /// flickering (palpaire) a ferestrei.
     /// Modul in care va fi implementata aceasta strategie in cadrul proiectului curent va fi triplu buffer-at
@@ -57,8 +59,10 @@ public class Game implements Runnable {
     ///                 *              *          *               *        *             *
     ///                 ****************          *****************        ***************
 
-    private Graphics g;          /*!< Referinta catre un context grafic.*/
+    private Graphics graphics;          /*!< Referinta catre un context grafic.*/
 
+    private int playerXCoord, playerYCoord, playerMatrixX, playerMatrixY;
+    private int playerStepSize;
 
     private Tile tile; /*!< variabila membra temporara. Este folosita in aceasta etapa doar pentru a desena ceva pe ecran.*/
 
@@ -76,9 +80,79 @@ public class Game implements Runnable {
         /// Obiectul GameWindow este creat insa fereastra nu este construita
         /// Acest lucru va fi realizat in metoda init() prin apelul
         /// functiei BuildGameWindow();
-        wnd = new GameWindow();
+        window = new GameWindow();
         /// Resetarea flagului runState ce indica starea firului de executie (started/stoped)
         runState = false;
+    }
+
+    //todo functie care upgradeaza x si y in matrice in functie de pasi
+
+    private void playerPosition()
+    {
+        System.out.print("\nx: "+playerXCoord+", y: "+playerYCoord+"\nmatx: "+playerMatrixX+", maty: "+playerMatrixY+"\n");
+        System.out.println("x%48= "+playerXCoord%48);
+        System.out.println("x/48= "+playerXCoord/48);
+        System.out.println("y%48= "+playerYCoord%48);
+        System.out.println("y/48= "+playerYCoord/48);
+    }
+
+    private void updatePosition()
+    {
+        playerMatrixX = playerXCoord / 48;
+        playerMatrixY = playerYCoord / 48;
+    }
+
+
+    private void stepVertical(char sign)  //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput final de matrice
+    {
+        updatePosition();
+
+//TODO UPDATE COORD
+        if(sign=='+') {
+            boolean test = Map.map1.canAdvance(playerMatrixX, playerMatrixY + 1);
+            if (test) {
+                playerYCoord += playerStepSize;
+            }
+        }
+        else {
+            boolean test = Map.map1.canAdvance(playerMatrixX, playerMatrixY - 1);
+            if (test) {
+                playerYCoord -= playerStepSize;
+            }
+            else
+            {
+                if(playerYCoord>playerMatrixY*48)
+                {
+                    playerYCoord -= playerStepSize;
+                }
+            }
+        }
+        updatePosition();
+    }
+
+    private void stepHorizontal(char sign)
+    {
+        updatePosition();
+        if(sign=='+')
+        {
+            boolean test = Map.map1.canAdvance(playerMatrixX+1, playerMatrixY);
+            if (test) {
+                playerXCoord += playerStepSize;}
+        }
+        else
+        {
+            boolean test = Map.map1.canAdvance(playerMatrixX-1, playerMatrixY);
+            if (test) {
+                playerXCoord -= playerStepSize;}
+            else
+            {
+                if(playerXCoord>playerMatrixX*48)
+                {
+                    playerXCoord -= playerStepSize;
+                }
+            }
+        }
+        updatePosition();
     }
 
     /*! \fn private void init()
@@ -89,11 +163,15 @@ public class Game implements Runnable {
 
      */
     private void InitGame() {
-        wnd = new GameWindow();
+        window = new GameWindow();
         /// Este construita fereastra grafica.
-        wnd.BuildGameWindow();
+        window.BuildGameWindow();
         /// Se incarca toate elementele grafice (dale)
         Assets.Init();
+        playerYCoord = playerMatrixY = Map.map1.startY();
+        playerYCoord*=48;
+        playerXCoord = playerMatrixX =  0;
+        playerStepSize = 2;
     }
 
     /*! \fn public void run()
@@ -115,13 +193,13 @@ public class Game implements Runnable {
 
         /// Atat timp timp cat threadul este pornit Update() & Draw()
         int i=0;
-        while (runState == true) { // TODO: 24.03.2022
+        while (runState == true) { // TODO: 24.03.2022 check ce mai e pe aici
             /// Se obtine timpul curent
             curentTime = System.nanoTime();
             /// Daca diferenta de timp dintre curentTime si oldTime mai mare decat 16.6 ms
             if ((curentTime - oldTime) > timeFrame) {
                 /// Actualizeaza pozitiile elementelor
-                //if()
+                if((curentTime - oldTime) > timeFrame)
                 Update();
                 /// Deseneaza elementele grafica in fereastra.
                 Draw();
@@ -180,8 +258,30 @@ public class Game implements Runnable {
 
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
-    private void Update() {
-
+    private void Update() {//todo just one movement key
+        if(window!=null) {
+            if (window.keyboardInputManager.up) {
+                stepVertical('-');
+                playerPosition();
+            }
+            if (window.keyboardInputManager.down) {
+                stepVertical('+');
+                playerPosition();
+            }
+            if (window.keyboardInputManager.left) {
+                stepHorizontal('-');
+                playerPosition();
+            }
+            if (window.keyboardInputManager.right) {
+                stepHorizontal('+');
+                playerPosition();
+            }
+            if(window.keyboardInputManager.reset)//todo add to documentatie
+            {
+                playerYCoord=Map.map1.startY()*48;
+                playerXCoord=0;
+            }
+        }
     }
 
     /*! \fn private void Draw()
@@ -191,13 +291,13 @@ public class Game implements Runnable {
      */
     private void Draw() {
         /// Returnez bufferStrategy pentru canvasul existent
-        bs = wnd.GetCanvas().getBufferStrategy();
+        bufferStrategy = window.GetCanvas().getBufferStrategy();
         /// Verific daca buffer strategy a fost construit sau nu
-        if (bs == null) {
+        if (bufferStrategy == null) {
             /// Se executa doar la primul apel al metodei Draw()
             try {
                 /// Se construieste tripul buffer
-                wnd.GetCanvas().createBufferStrategy(3);
+                window.GetCanvas().createBufferStrategy(3);
                 return;
             } catch (Exception e) {
                 /// Afisez informatii despre problema aparuta pentru depanare.
@@ -205,33 +305,43 @@ public class Game implements Runnable {
             }
         }
         /// Se obtine contextul grafic curent in care se poate desena.
-        g = bs.getDrawGraphics();
+        graphics = bufferStrategy.getDrawGraphics();
         /// Se sterge ce era
-        g.clearRect(0, 0, wnd.GetWndWidth(), wnd.GetWndHeight());
+        graphics.clearRect(0, 0, window.GetWndWidth(), window.GetWndHeight());
 
         /// operatie de desenare
         // ...............
 
         // TODO: 24.03.2022!!!!!!
 
-        int a = Assets.maps[1].getWidth();
-        int b = Assets.maps[1].getHeight();
-        int c = Assets.maps[0].getWidth();
-        int d = Assets.maps[0].getHeight();
-        g.drawRect(0,0,1440,768);
-        g.setColor(Color.black);
-        g.fillRect(0,0,1440,768);
-        g.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
-        g.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
+        //System.out.println("\n\n");
+        //System.out.println(window.windowFrame.isFocused());
+        //System.out.println(window.windowFrame.isActive());
+        window.windowFrame.requestFocusInWindow();
+        //System.out.println(window.keyboardInputManager == window.windowFrame.getKeyListeners()[0]);
+
+
+
+        int a = playerMatrixX;
+        int b = playerMatrixY;
+        int c = playerXCoord;
+        int d = playerYCoord;
+        //graphics.drawRect(0,0,1440,768);
+        //graphics.setColor(Color.black);
+        //graphics.fillRect(0,0,1440,768);
+        //playerPosition();
+        graphics.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
+        graphics.drawRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
+        //graphics.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
 
 
         // end operatie de desenare
         /// Se afiseaza pe ecran
-        bs.show();
+        bufferStrategy.show();
 
         /// Elibereaza resursele de memorie aferente contextului grafic curent (zonele de memorie ocupate de
         /// elementele grafice ce au fost desenate pe canvas).
-        g.dispose();
+        graphics.dispose();
     }
 
 }

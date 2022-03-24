@@ -8,9 +8,15 @@ public class Map  {
     private int[][] matrix = new int[32][60];
     private final int mapNr;
 
-    boolean canAdvance(int rand, int coloana)
+    boolean canAdvance(int coloana, int rand)
     {
-        return matrix[rand][coloana] == 1;
+        if(rand>=0 && coloana>=0) { //todo rename coloana rand dupa o logica mai cu sens cu x si y
+            int testValue = matrix[rand][coloana];
+            return matrix[rand][coloana] == 1;
+        }
+        else
+            return false;
+
     }
 
     boolean canKill(int rand, int coloana)
@@ -18,17 +24,54 @@ public class Map  {
         return matrix[rand][coloana] == 3;
     }
 
-    boolean end(int rand, int coloana)
+    int endY()
     {
         if(mapNr == 1)
         {
-            return rand==14;
+            return 14;
         }
         else
         {
-            return rand==12;
+            return 12;
         }
 
+    }
+
+    int startY()
+    {
+        if(mapNr == 1)
+        {
+            return 10;
+        }
+        else
+        {
+            return 8;
+        }
+
+    }
+
+    public void testMap()
+    {
+        for(int i=0;i<16;++i)
+        {
+            System.out.print("\t"+i+": \t");
+            if(i<=9)
+            {
+                System.out.print("\t");
+            }
+            for(int j=0;j<30;++j)
+            {
+                System.out.print(matrix[i][j]+ "\t");
+            }
+            System.out.println();
+        }
+
+        System.out.print("\t\t\t");
+
+        for(int i=0;i<30;++i)
+        {
+            System.out.print(i+ "\t");
+        }
     }
 
     private Map(int mapNumber) {
@@ -51,6 +94,7 @@ public class Map  {
                     {0,0,0,1,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,0},
                     {0,3,3,3,0,1,1,1,0,3,0,0,1,1,1,1,1,1,1,1,0,1,1,3,0,0,1,1,1,1},
                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            this.matrix = matrix;
         }
         else
         {
@@ -71,6 +115,7 @@ public class Map  {
                             {0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0},
                             {0,1,1,1,1,1,1,1,0,0,0,0,3,0,3,3,3,1,1,1,0,0,0,0,1,1,1,1,3,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            this.matrix = matrix;
         }
 
 

@@ -10,6 +10,11 @@ import java.awt.*;
  */
 public class Assets {
 
+    public static void test(String mesaj)
+    {
+        System.out.println("\n\n"+mesaj+"\n\n");
+    }
+
     /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage[] maps = new BufferedImage[2];
 
