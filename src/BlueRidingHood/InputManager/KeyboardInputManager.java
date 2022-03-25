@@ -3,16 +3,20 @@ package BlueRidingHood.InputManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 check other shit
+public class KeyboardInputManager implements KeyListener {
+    //todo add la documentatie celelalte key adaugate
+    //todo add celelate comenzi
 
     public Boolean up, down, left, right;
-    public Boolean swordAttack, iceAttack, shieldActivate;
-    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset;
-    public String lastMovementDirection ="left";
+    public Boolean swordAttack, iceAttack, shieldActivated;
+    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular;
+    public String lastMovementDirection ="right", lastMovementKeYPressed="right";
 
     public KeyboardInputManager()
     {
-        up = down = left = right = swordAttack = iceAttack = shieldActivate = escape = GODModeOn = resetHitCounter = killAllEnemies =reset = false;
+        up = down = left = right = swordAttack = iceAttack =
+                  shieldActivated = escape = GODModeOn = resetHitCounter =
+                        killAllEnemies =reset = rectangular = false;
     }
 
     @Override
@@ -22,25 +26,41 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         if(keyPressedCode == KeyEvent.VK_W)
         {
             up=true;
+            lastMovementKeYPressed="up";
         }
         if(keyPressedCode == KeyEvent.VK_S)
         {
             down = true;
+            lastMovementKeYPressed="down";
         }
         if(keyPressedCode == KeyEvent.VK_A)
         {
             left = true;
             lastMovementDirection ="left";
+            lastMovementKeYPressed="left";
         }
         if(keyPressedCode == KeyEvent.VK_D)
         {
             right = true;
             lastMovementDirection ="right";
+            lastMovementKeYPressed="right";
         }
         if(keyPressedCode == KeyEvent.VK_R)
         {
             reset = true;
         }
+        if(keyPressedCode == KeyEvent.VK_T)
+        {
+            if(rectangular)
+            {
+                rectangular = false;
+            }
+            else
+            {
+                rectangular = true;
+            }
+        }
+
 
 
         if(keyPressedCode == KeyEvent.VK_F)
@@ -53,7 +73,7 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         }
         if(keyPressedCode == KeyEvent.VK_Q)
         {
-            shieldActivate = true;
+            shieldActivated = true;
         }
 
         if(keyPressedCode == KeyEvent.VK_F10)
@@ -73,6 +93,7 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         {
             escape = true;
         }
+
 
     }
 
@@ -112,7 +133,7 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         }
         if(keyReleasedCode == KeyEvent.VK_Q)
         {
-            shieldActivate = false;
+            shieldActivated = false;
         }
 
         if(keyReleasedCode == KeyEvent.VK_F10)

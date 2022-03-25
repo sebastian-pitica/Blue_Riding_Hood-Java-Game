@@ -10,11 +10,6 @@ import java.awt.*;
  */
 public class Assets {
 
-    public static void test(String mesaj)
-    {
-        System.out.println("\n\n"+mesaj+"\n\n");
-    }
-
     /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage[] maps = new BufferedImage[2];
 
@@ -96,8 +91,8 @@ public class Assets {
         SpriteSheet zaWalfo = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/zawalfo.png"));
         SpriteSheet wolf = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/garda.png"));
 
-        // TODO: 23.03.2022 butoane 
-        // TODO: 23.03.2022 atac foc gheata 
+        // TODO: 23.03.2022 butoane sprites loaf
+        // TODO: 23.03.2022 atac foc gheata  sprites load
         
         maps[0] = ImageLoader.LoadImage("/textures/map/firstmap2.png");
         maps[1] = ImageLoader.LoadImage("/textures/map/secondmap2.png");

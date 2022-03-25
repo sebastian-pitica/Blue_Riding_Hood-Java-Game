@@ -1,7 +1,8 @@
 package BlueRidingHood;
 
+import BlueRidingHood.Entities.Player;
 import BlueRidingHood.GameWindow.GameWindow;
-import BlueRidingHood.Graphics.Animator;
+import BlueRidingHood.Graphics.Animation;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Tiles.Tile;
 
@@ -43,7 +44,7 @@ import java.util.Objects;
         - public synchronized void stop()   //metoda publica de oprire a jocului
  */
 public class Game implements Runnable {
-    private GameWindow window;        /*!< Fereastra in care se va desena tabla jocului*/
+    private GameWindow gameWindow;        /*!< Fereastra in care se va desena tabla jocului*/
     private boolean runState;   /*!< Flag ce starea firului de executie.*/
     private Thread gameThread; /*!< Referinta catre thread-ul de update si draw al ferestrei*/
     private BufferStrategy bufferStrategy;         /*!< Referinta catre un mecanism cu care se organizeaza memoria complexa pentru un canvas.*/
@@ -61,12 +62,15 @@ public class Game implements Runnable {
 
     private Graphics graphics;          /*!< Referinta catre un context grafic.*/
 
-    private int playerXCoord, playerYCoord, playerMatrixX, playerMatrixY;
-    private int playerStepSize;
+    private Player player;
+    //todo other entities
+    private Tile tile; /*!< variabila membra temporara. Este folosita in aceasta etapa doar pentru a desena ceva pe ecran.*/ //todo check it
 
-    private Tile tile; /*!< variabila membra temporara. Este folosita in aceasta etapa doar pentru a desena ceva pe ecran.*/
+    private Animation currentPlayerAnimation;
+    //todo possible other animations
 
-    private Animator playerStandAnimation, playerLeftRun, playerRightRun, actualAnimation;
+    private boolean displayRect = false;
+    private long shieldStartTime;
 
     /*! \fn public Game(String title, int width, int height)
         \brief Constructor de initializare al clasei Game.
@@ -82,87 +86,79 @@ public class Game implements Runnable {
         /// Obiectul GameWindow este creat insa fereastra nu este construita
         /// Acest lucru va fi realizat in metoda init() prin apelul
         /// functiei BuildGameWindow();
-        window = new GameWindow();
+        gameWindow = new GameWindow();
         /// Resetarea flagului runState ce indica starea firului de executie (started/stoped)
         runState = false;
     }
 
-    private boolean checkActualPosition()//todo alta versiune
+    private boolean checkActualPosition()//todo alta versiune cu posibila corecti
     {
-        int xdjIdeal=(playerMatrixX+1)*48;
-        int ydjIdeal=(playerMatrixY+1)*48;
+        int xdjIdeal=(player.matrixX+1)*48;
+        int ydjIdeal=(player.matrixY+1)*48;
         return true;
     }
 
-    //todo functie care upgradeaza x si y in matrice in functie de pasi
-
-    private void playerPosition()
+    private void displayPlayerPosition()
     {
-        System.out.print("\nx: "+playerXCoord+", y: "+playerYCoord+"\nmatx: "+playerMatrixX+", maty: "+playerMatrixY+"\n");
-        System.out.println("Correct?: "+checkActualPosition());
-        System.out.println("x%48= "+playerXCoord%48);
-        System.out.println("x/48= "+playerXCoord/48);
-        System.out.println("y%48= "+playerYCoord%48);
-        System.out.println("y/48= "+playerYCoord/48);
+        System.out.print("\nx: "+player.xCoord+", y: "+player.yCoord+"\nmatx: "+player.matrixX+", maty: "+player.matrixY+"\n");
     }
 
-    private void updatePosition()
+    private void updatePlayerPositionInMatrix()
     {
-        playerMatrixX = playerXCoord / 48;
-        playerMatrixY = playerYCoord / 48;
+        player.matrixX = player.xCoord / 48;
+        player.matrixY = player.yCoord / 48;
     }
 
-
-    private void stepVertical(char sign)  //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput final de matrice
+    private void stepVertical(char sign)
+    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput final de matrice
     {
-        updatePosition();
-
-//TODO UPDATE COORD
+        updatePlayerPositionInMatrix();
         if(sign=='+') {
-            boolean test = Map.map1.canAdvance(playerMatrixX, playerMatrixY + 1);
+            boolean test = Map.map1.canAdvance(player.matrixX, player.matrixY + 1);
             if (test) {
-                playerYCoord += playerStepSize;
+                player.yCoord += player.stepSize;
             }
         }
         else {
-            boolean test = Map.map1.canAdvance(playerMatrixX, playerMatrixY - 1);
+            boolean test = Map.map1.canAdvance(player.matrixX, player.matrixY - 1);
             if (test) {
-                playerYCoord -= playerStepSize;
+                player.yCoord -= player.stepSize;
             }
             else
             {
-                if(playerYCoord>playerMatrixY*48)
+                if(player.yCoord>player.matrixY*48)
                 {
-                    playerYCoord -= playerStepSize;
+                    player.yCoord -= player.stepSize;
                 }
             }
         }
-        updatePosition();
+        updatePlayerPositionInMatrix();
     }
 
     private void stepHorizontal(char sign)
+    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput final de matrice
     {
-        updatePosition();
+        updatePlayerPositionInMatrix();
         if(sign=='+')
         {
-            boolean test = Map.map1.canAdvance(playerMatrixX+1, playerMatrixY);
+            boolean test = Map.map1.canAdvance(player.matrixX+1, player.matrixY);
             if (test) {
-                playerXCoord += playerStepSize;}
+                player.xCoord += player.stepSize;}
         }
         else
         {
-            boolean test = Map.map1.canAdvance(playerMatrixX-1, playerMatrixY);
+            boolean test = Map.map1.canAdvance(player.matrixX-1, player.matrixY);
             if (test) {
-                playerXCoord -= playerStepSize;}
+                player.xCoord -= player.stepSize;}
             else
             {
-                if(playerXCoord>playerMatrixX*48)
+                if(player.xCoord>player.matrixX*48)
                 {
-                    playerXCoord -= playerStepSize;
+                    player.xCoord -= player.stepSize;
                 }
             }
         }
-        updatePosition();
+        updatePlayerPositionInMatrix();
     }
 
     /*! \fn private void init()
@@ -173,20 +169,14 @@ public class Game implements Runnable {
 
      */
     private void InitGame() {
-        window = new GameWindow();
+        gameWindow = new GameWindow();
         /// Este construita fereastra grafica.
-        window.BuildGameWindow();
+        gameWindow.BuildGameWindow();
         /// Se incarca toate elementele grafice (dale)
         Assets.Init();
-        playerYCoord = playerMatrixY = Map.map1.startY();
-        playerYCoord*=48;
-        playerXCoord = playerMatrixX =  0;
-        playerStepSize = 1;
-
-        playerStandAnimation = new Animator(6,Assets.playerRightStand);
-        playerLeftRun = new Animator(3,Assets.playerLeftRun);
-        playerRightRun = new Animator(3,Assets.playerRightRun);
-        actualAnimation = playerStandAnimation;
+        player = new Player(0,Map.map1.startY()*48,0,Map.map1.startY(),4,2);
+        currentPlayerAnimation = player.rightStand;
+        //todo init pentru alte entitati
     }
 
     /*! \fn public void run()
@@ -194,7 +184,8 @@ public class Game implements Runnable {
 
         Aceasta functie va actualiza starea jocului si va redesena tabla de joc (va actualiza fereastra grafica)
      */
-    public void run() {
+    public void run()//todo check but not touch
+    {
         /// Initializeaza obiectul game
         InitGame();
         long oldTime = System.nanoTime();   /*!< Retine timpul in nanosecunde aferent frame-ului anterior.*/
@@ -207,14 +198,12 @@ public class Game implements Runnable {
         final double timeFrame = 1000000000 / framesPerSecond; /*!< Durata unui frame in nanosecunde.*/
 
         /// Atat timp timp cat threadul este pornit Update() & Draw()
-        int i=0;
-        while (runState == true) { // TODO: 24.03.2022 check ce mai e pe aici
+        while (runState) {
             /// Se obtine timpul curent
             curentTime = System.nanoTime();
             /// Daca diferenta de timp dintre curentTime si oldTime mai mare decat 16.6 ms
             if ((curentTime - oldTime) > timeFrame) {
                 /// Actualizeaza pozitiile elementelor
-                if((curentTime - oldTime) > timeFrame)
                 Update();
                 /// Deseneaza elementele grafica in fereastra.
                 Draw();
@@ -229,8 +218,9 @@ public class Game implements Runnable {
 
         Metoda trebuie sa fie declarata synchronized pentru ca apelul acesteia sa fie semaforizat.
      */
-    public synchronized void StartGame() {
-        if (runState == false) {
+    public synchronized void StartGame() //todo check but not touch
+    {
+        if (!runState) {
             /// Se actualizeaza flagul de stare a threadului
             runState = true;
             /// Se construieste threadul avand ca parametru obiectul Game. De retinut faptul ca Game class
@@ -244,13 +234,29 @@ public class Game implements Runnable {
         }
     }
 
+    private boolean timeToStopAnimation(long startTime, String animation)
+    {
+        //todo for all timed animation
+        long nowTime = System.nanoTime();
+
+        if((nowTime - startTime)/5 >= 1000000000) //for shield animation switch case
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     /*! \fn public synchronized void stop()
         \brief Opreste executie thread-ului.
 
         Metoda trebuie sa fie declarata synchronized pentru ca apelul acesteia sa fie semaforizat.
      */
     public synchronized void StopGame() {
-        if (runState == true) {
+        if (runState) {
             /// Actualizare stare thread
             runState = false;
             /// Metoda join() arunca exceptii motiv pentru care trebuie incadrata intr-un block try - catch.
@@ -266,6 +272,133 @@ public class Game implements Runnable {
             /// Thread-ul este oprit deja.
             return;
         }
+
+    }//todo check utility
+
+    private void animationStartTimeHandler() //todo for all animations
+    {
+        if(gameWindow.keyboardInputManager.shieldActivated)
+        {
+            player.shieldActive = true;
+            shieldStartTime = System.nanoTime();
+        }
+    }
+
+    private void aniomationStopTimeHandler() //todo for all animations
+    {
+        if(timeToStopAnimation(shieldStartTime, "shield"))
+        {
+            player.shieldActive = false;
+        }
+    }
+
+    private void playerInputHandler()
+    {
+        if (gameWindow.keyboardInputManager.up) {
+            stepVertical('-');
+            displayPlayerPosition();
+
+        }
+        if (gameWindow.keyboardInputManager.down) {
+            stepVertical('+');
+            displayPlayerPosition();
+
+        }
+        if (gameWindow.keyboardInputManager.left) {
+            stepHorizontal('-');
+            displayPlayerPosition();
+        }
+        if (gameWindow.keyboardInputManager.right) {
+            stepHorizontal('+');
+            displayPlayerPosition();
+        }
+
+        if(gameWindow.keyboardInputManager.reset)//todo add to documentatie
+        {
+            player.yCoord=Map.map1.startY()*48;
+            player.xCoord=0;
+
+        }
+
+    }
+
+    private Animation currentAnimationHandler()
+    {
+        Animation result = null;
+
+        if (gameWindow.keyboardInputManager.up || gameWindow.keyboardInputManager.down) {
+            if(Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "left"))
+            {
+                if(!player.shieldActive) {
+                    result = player.leftRun;
+                }
+                else
+                {
+                    result = player.leftShieldRun;
+                }
+            }
+            else
+            {
+                if(Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "right"))
+                {
+                    if(!player.shieldActive) {
+                        result = player.rightRun;
+                    }
+                    else
+                    {
+                        result = player.rightShieldRun;
+                    }
+                }
+            }
+        }
+
+        if (gameWindow.keyboardInputManager.left) {
+            if(!player.shieldActive) {
+                result = player.leftRun;
+            }
+            else
+            {
+                result = player.leftShieldRun;
+            }
+        }
+        if (gameWindow.keyboardInputManager.right) {
+            if(!player.shieldActive) {
+                result = player.rightRun;
+            }
+            else
+            {
+                result = player.rightShieldRun;
+            }
+        }
+
+        if(gameWindow.keyboardInputManager.reset || !gameWindow.keyboardInputManager.anyMovementKeyPressed())//todo add to documentatie
+        {
+            if(Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "left"))
+            {
+                if(!player.shieldActive) {
+                    result = player.leftStand;
+                }
+                else
+                {
+                    result = player.leftShieldStand;
+                }
+            }
+            else
+            {
+                if(Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "right"))
+                {
+                    if(!player.shieldActive) {
+                        result = player.rightStand;
+                    }
+                    else
+                    {
+                        result = player.rightShieldStand;
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     /*! \fn private void Update()
@@ -273,63 +406,13 @@ public class Game implements Runnable {
 
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
-    private void Update() {//todo just one movement key
-        //todo display rect button
-        if(window!=null) {
-            if (window.keyboardInputManager.up) {
-                stepVertical('-');
-                playerPosition();
-                if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "left"))
-                {
-                    actualAnimation = playerLeftRun;
-                }
-                else
-                {
-                    if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "right"))
-                    {
-                        actualAnimation = playerRightRun ;
-                    }
-                }
-            }
-            if (window.keyboardInputManager.down) {
-                stepVertical('+');
-                playerPosition();
-                if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "left"))
-                {
-                    actualAnimation = playerLeftRun;
-                }
-                else
-                {
-                    if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "right"))
-                    {
-                        actualAnimation = playerRightRun ;
-                    }
-                }
-            }
-            if (window.keyboardInputManager.left) {
-                stepHorizontal('-');
-                playerPosition();
-                actualAnimation = playerLeftRun;
-            }
-            if (window.keyboardInputManager.right) {
-                stepHorizontal('+');
-                playerPosition();
-                actualAnimation = playerRightRun ;
-            }
+    private void Update() {
 
-            if(window.keyboardInputManager.reset)//todo add to documentatie
-            {
-                playerYCoord=Map.map1.startY()*48;
-                playerXCoord=0;
-                actualAnimation = playerStandAnimation;
-            }
-
-            if(!window.keyboardInputManager.anyMovementKeyPressed())
-            {
-                actualAnimation = playerStandAnimation;
-            }
-
-            actualAnimation.runAnimation();
+        if(gameWindow !=null) {
+            displayRect = gameWindow.keyboardInputManager.rectangular;
+            playerInputHandler();
+            currentPlayerAnimation = currentAnimationHandler();
+            currentPlayerAnimation.runAnimation();
         }
     }
 
@@ -340,13 +423,13 @@ public class Game implements Runnable {
      */
     private void Draw() {
         /// Returnez bufferStrategy pentru canvasul existent
-        bufferStrategy = window.GetCanvas().getBufferStrategy();
+        bufferStrategy = gameWindow.GetCanvas().getBufferStrategy();
         /// Verific daca buffer strategy a fost construit sau nu
         if (bufferStrategy == null) {
             /// Se executa doar la primul apel al metodei Draw()
             try {
                 /// Se construieste tripul buffer
-                window.GetCanvas().createBufferStrategy(3);
+                gameWindow.GetCanvas().createBufferStrategy(3);
                 return;
             } catch (Exception e) {
                 /// Afisez informatii despre problema aparuta pentru depanare.
@@ -356,28 +439,29 @@ public class Game implements Runnable {
         /// Se obtine contextul grafic curent in care se poate desena.
         graphics = bufferStrategy.getDrawGraphics();
         /// Se sterge ce era
-        graphics.clearRect(0, 0, window.GetWndWidth(), window.GetWndHeight());
+        graphics.clearRect(0, 0, gameWindow.GetWndWidth(), gameWindow.GetWndHeight());
 
-        /// operatie de desenare
-        // ...............
 
-        // TODO: 24.03.2022!!!!!!
-
-        //System.out.println("\n\n");
         //System.out.println(window.windowFrame.isFocused());
         //System.out.println(window.windowFrame.isActive());
-        window.windowFrame.requestFocusInWindow();
         //System.out.println(window.keyboardInputManager == window.windowFrame.getKeyListeners()[0]);
+        gameWindow.windowFrame.requestFocusInWindow();
 
 
         //graphics.drawRect(0,0,1440,768);
         //graphics.setColor(Color.black);
         //graphics.fillRect(0,0,1440,768);
         //playerPosition();
+
+        aniomationStopTimeHandler();
         graphics.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
-        actualAnimation.drawAnimation(graphics,playerXCoord,playerYCoord,Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
-        graphics.drawRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
-        //graphics.fillRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
+        currentPlayerAnimation.drawAnimation(graphics,player.xCoord,player.yCoord,Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
+        animationStartTimeHandler();
+
+        if(displayRect) {
+            graphics.drawRect(player.xCoord, player.yCoord, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
+        }
+        //graphics.fillRect(player.xCoord,player.yCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
         //graphics.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
 
 

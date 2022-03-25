@@ -3,33 +3,37 @@ package BlueRidingHood.Graphics;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Animator {
+public class Animation {
+    //clasa preluata din proiectul SunnyLand de Paval Mihaela Irina (2019-2020)
 
     private int speed;
     private int frames;
     private int index= 0;
     private int count= 0;
 
-    private BufferedImage[] images; //contine toate imaginile unei animatii
-    private BufferedImage currentImg; //tine evidenta imaginii la care facem referire
+    private BufferedImage[] images;
+    private BufferedImage currentImg;
 
-    public Animator(int speed,BufferedImage... args){
+    public Animation(int speed, BufferedImage[] arg){
         this.speed=speed;
-        images=new BufferedImage[args.length];
-        for(int i=0;i<args.length;i++){
-            images[i]=args[i];
+
+        images=new BufferedImage[arg.length];
+
+        for(int i=0;i<arg.length;++i)
+        {
+            images[i]=arg[i];
         }
-        frames=args.length;
+        frames=arg.length;
     }
 
-    public void runAnimation(){
+    public void runAnimation()
+    {
         index++;
         if(index>speed){
             index=0;
             nextFrame();
         }
     }
-
 
     private void nextFrame(){
         for(int i=0;i<frames;i++){

@@ -12,8 +12,8 @@ import java.awt.*;
     ferestre grafice si totodata si cea a unui container (toate elementele
     grafice vor fi continute de fereastra).
  */
-public class GameWindow { //todo keylistener
-    public JFrame windowFrame;       /*!< fereastra principala a jocului*///todo
+public class GameWindow { //todo check but no touch
+    public JFrame windowFrame;       /*!< fereastra principala a jocului*///todo vezi daca ramen public
     private final String windowTitle;       /*!< titlul ferestrei*/
     private final int windowWidth;       /*!< latimea ferestrei in pixeli*/
     private final int windowHeight;      /*!< inaltimea ferestrei in pixeli*/
@@ -76,7 +76,6 @@ public class GameWindow { //todo keylistener
         windowFrame.setVisible(true);
 
         keyboardInputManager = new KeyboardInputManager();
-
         windowFrame.addKeyListener(keyboardInputManager);
         windowFrame.setFocusable(true);
 
