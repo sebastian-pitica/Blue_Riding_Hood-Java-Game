@@ -18,20 +18,6 @@ public class Assets {
     /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage[] maps = new BufferedImage[2];
 
-    public static BufferedImage[] playerLeftStand = new BufferedImage[4];
-    public static BufferedImage[] playerLeftRun = new BufferedImage[6];
-    public static BufferedImage[] playerLeftRetractSword = new BufferedImage[9];
-    public static BufferedImage[] playerLeftDrawSword = new BufferedImage[9];
-    public static BufferedImage[] playerLeftAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[8];
-
-    public static BufferedImage[] playerLeftShieldStand = new BufferedImage[4];
-    public static BufferedImage[] playerLeftShieldRun = new BufferedImage[6];
-    public static BufferedImage[] playerLeftShieldRetractSword = new BufferedImage[9];
-    public static BufferedImage[] playerLeftShieldDrawSword = new BufferedImage[9];
-    public static BufferedImage[] playerLeftShieldAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[8];
-
     public static BufferedImage[] playerRightStand = new BufferedImage[4];
     public static BufferedImage[] playerRightRun = new BufferedImage[6];
     public static BufferedImage[] playerRightRetractSword = new BufferedImage[9];
@@ -45,6 +31,20 @@ public class Assets {
     public static BufferedImage[] playerRightShieldDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerRightShieldAttackSword = new BufferedImage[17];
     public static BufferedImage[] playerRightShieldAttackIce = new BufferedImage[8];
+
+    public static BufferedImage[] playerLeftStand = new BufferedImage[4];
+    public static BufferedImage[] playerLeftRun = new BufferedImage[6];
+    public static BufferedImage[] playerLeftRetractSword = new BufferedImage[9];
+    public static BufferedImage[] playerLeftDrawSword = new BufferedImage[9];
+    public static BufferedImage[] playerLeftAttackSword = new BufferedImage[17];
+    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[8];
+
+    public static BufferedImage[] playerLeftShieldStand = new BufferedImage[4];
+    public static BufferedImage[] playerLeftShieldRun = new BufferedImage[6];
+    public static BufferedImage[] playerLeftShieldRetractSword = new BufferedImage[9];
+    public static BufferedImage[] playerLeftShieldDrawSword = new BufferedImage[9];
+    public static BufferedImage[] playerLeftShieldAttackSword = new BufferedImage[17];
+    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[8];
 
     public static BufferedImage[] bear1Left = new BufferedImage[3];
     public static BufferedImage[] bear1Right = new BufferedImage[3];
@@ -106,51 +106,51 @@ public class Assets {
         //player
         {
             for (int j = 0; j < 4; ++j, ++i) {
-                playerLeftStand[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldStand[j] = playerShield.crop(i, 0, 48, 48);
-                playerRightStand[j] = getFlippedImage(playerLeftStand[j]);
-                playerRightShieldStand[j] = getFlippedImage(playerLeftShieldStand[j]);
+                playerRightStand[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldStand[j] = playerShield.crop(i, 0, 48, 48);
+                playerLeftStand[j] = getFlippedImage(playerRightStand[j]);
+                playerLeftShieldStand[j] = getFlippedImage(playerRightShieldStand[j]);
             }
 
             for (int j = 0; j < 6; ++j, ++i) {
-                playerLeftRun[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldRun[j] = playerShield.crop(i, 0, 48, 48);
-                playerRightRun[j] = getFlippedImage(playerLeftRun[j]);
-                playerRightShieldRun[j] = getFlippedImage(playerLeftShieldRun[j]);
+                playerRightRun[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldRun[j] = playerShield.crop(i, 0, 48, 48);
+                playerLeftRun[j] = getFlippedImage(playerRightRun[j]);
+                playerLeftShieldRun[j] = getFlippedImage(playerRightShieldRun[j]);
             }
 
             for (int j = 0; j < 9; ++j, ++i) {
-                playerLeftDrawSword[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldDrawSword[j] = playerShield.crop(i, 0, 48, 48);
+                playerRightDrawSword[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldDrawSword[j] = playerShield.crop(i, 0, 48, 48);
 
-                playerRightDrawSword[j] = getFlippedImage(playerLeftDrawSword[j]);
-                playerRightShieldDrawSword[j] = getFlippedImage(playerLeftShieldDrawSword[j]);
+                playerLeftDrawSword[j] = getFlippedImage(playerRightDrawSword[j]);
+                playerLeftShieldDrawSword[j] = getFlippedImage(playerRightShieldDrawSword[j]);
             }
 
             i -= 4;
 
             for (int j = 0; j < 9; ++j, ++i) {
-                playerLeftRetractSword[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldRetractSword[j] = playerShield.crop(i, 0, 48, 48);
+                playerRightRetractSword[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldRetractSword[j] = playerShield.crop(i, 0, 48, 48);
 
-                playerRightRetractSword[j] = getFlippedImage(playerLeftRetractSword[j]);
-                playerRightShieldRetractSword[j] = getFlippedImage(playerLeftShieldRetractSword[j]);
+                playerLeftRetractSword[j] = getFlippedImage(playerRightRetractSword[j]);
+                playerLeftShieldRetractSword[j] = getFlippedImage(playerRightShieldRetractSword[j]);
             }
 
             for (int j = 0; j < 17; ++j, ++i) {
-                playerLeftAttackSword[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldAttackSword[j] = playerShield.crop(i, 0, 48, 48);
+                playerRightAttackSword[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldAttackSword[j] = playerShield.crop(i, 0, 48, 48);
 
-                playerRightAttackSword[j] = getFlippedImage(playerLeftAttackSword[j]);
-                playerRightShieldAttackSword[j] = getFlippedImage(playerLeftShieldAttackSword[j]);
+                playerLeftAttackSword[j] = getFlippedImage(playerRightAttackSword[j]);
+                playerLeftShieldAttackSword[j] = getFlippedImage(playerRightShieldAttackSword[j]);
             }
 
             for (int j = 0; j < 8; ++j, ++i) {
-                playerLeftAttackIce[j] = player.crop(i, 0, 48, 48);
-                playerLeftShieldAttackIce[j] = playerShield.crop(i, 0, 48, 48);
+                playerRightAttackIce[j] = player.crop(i, 0, 48, 48);
+                playerRightShieldAttackIce[j] = playerShield.crop(i, 0, 48, 48);
 
-                playerRightAttackIce[j] = getFlippedImage(playerLeftAttackIce[j]);
-                playerRightShieldAttackIce[j] = getFlippedImage(playerLeftShieldAttackIce[j]);
+                playerLeftAttackIce[j] = getFlippedImage(playerRightAttackIce[j]);
+                playerLeftShieldAttackIce[j] = getFlippedImage(playerRightShieldAttackIce[j]);
             }
         }
         //zawalfo&wolf

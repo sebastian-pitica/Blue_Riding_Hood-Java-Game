@@ -8,6 +8,7 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
     public Boolean up, down, left, right;
     public Boolean swordAttack, iceAttack, shieldActivate;
     public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset;
+    public String lastMovementDirection ="left";
 
     public KeyboardInputManager()
     {
@@ -29,10 +30,12 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         if(keyPressedCode == KeyEvent.VK_A)
         {
             left = true;
+            lastMovementDirection ="left";
         }
         if(keyPressedCode == KeyEvent.VK_D)
         {
             right = true;
+            lastMovementDirection ="right";
         }
         if(keyPressedCode == KeyEvent.VK_R)
         {
@@ -131,6 +134,9 @@ public class KeyboardInputManager implements KeyListener { // TODO: 24.03.2022 c
         }
     }
 
+    public boolean anyMovementKeyPressed()
+    {
+        return up || down || left || right;     }
 
     @Override public void keyTyped(KeyEvent e) {
 

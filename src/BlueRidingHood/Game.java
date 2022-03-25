@@ -1,13 +1,13 @@
 package BlueRidingHood;
 
 import BlueRidingHood.GameWindow.GameWindow;
+import BlueRidingHood.Graphics.Animator;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Tiles.Tile;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-
-import static BlueRidingHood.Graphics.Assets.test;
+import java.util.Objects;
 
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
@@ -66,6 +66,8 @@ public class Game implements Runnable {
 
     private Tile tile; /*!< variabila membra temporara. Este folosita in aceasta etapa doar pentru a desena ceva pe ecran.*/
 
+    private Animator playerStandAnimation, playerLeftRun, playerRightRun, actualAnimation;
+
     /*! \fn public Game(String title, int width, int height)
         \brief Constructor de initializare al clasei Game.
 
@@ -85,13 +87,11 @@ public class Game implements Runnable {
         runState = false;
     }
 
-    private boolean checkActualPosition(int xss, int yss)//todo alta versiune
+    private boolean checkActualPosition()//todo alta versiune
     {
         int xdjIdeal=(playerMatrixX+1)*48;
         int ydjIdeal=(playerMatrixY+1)*48;
-        int xdjReal=xss+48;
-        int ydjReal=yss+48;
-        return xdjReal<=xdjIdeal && ydjReal<=ydjIdeal;
+        return true;
     }
 
     //todo functie care upgradeaza x si y in matrice in functie de pasi
@@ -99,7 +99,7 @@ public class Game implements Runnable {
     private void playerPosition()
     {
         System.out.print("\nx: "+playerXCoord+", y: "+playerYCoord+"\nmatx: "+playerMatrixX+", maty: "+playerMatrixY+"\n");
-        System.out.println("Correct?: "+checkActualPosition(playerXCoord,playerYCoord));
+        System.out.println("Correct?: "+checkActualPosition());
         System.out.println("x%48= "+playerXCoord%48);
         System.out.println("x/48= "+playerXCoord/48);
         System.out.println("y%48= "+playerYCoord%48);
@@ -181,7 +181,12 @@ public class Game implements Runnable {
         playerYCoord = playerMatrixY = Map.map1.startY();
         playerYCoord*=48;
         playerXCoord = playerMatrixX =  0;
-        playerStepSize = 2;
+        playerStepSize = 1;
+
+        playerStandAnimation = new Animator(6,Assets.playerRightStand);
+        playerLeftRun = new Animator(3,Assets.playerLeftRun);
+        playerRightRun = new Animator(3,Assets.playerRightRun);
+        actualAnimation = playerStandAnimation;
     }
 
     /*! \fn public void run()
@@ -269,28 +274,62 @@ public class Game implements Runnable {
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
     private void Update() {//todo just one movement key
+        //todo display rect button
         if(window!=null) {
             if (window.keyboardInputManager.up) {
                 stepVertical('-');
                 playerPosition();
+                if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "left"))
+                {
+                    actualAnimation = playerLeftRun;
+                }
+                else
+                {
+                    if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "right"))
+                    {
+                        actualAnimation = playerRightRun ;
+                    }
+                }
             }
             if (window.keyboardInputManager.down) {
                 stepVertical('+');
                 playerPosition();
+                if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "left"))
+                {
+                    actualAnimation = playerLeftRun;
+                }
+                else
+                {
+                    if(Objects.equals(window.keyboardInputManager.lastMovementDirection, "right"))
+                    {
+                        actualAnimation = playerRightRun ;
+                    }
+                }
             }
             if (window.keyboardInputManager.left) {
                 stepHorizontal('-');
                 playerPosition();
+                actualAnimation = playerLeftRun;
             }
             if (window.keyboardInputManager.right) {
                 stepHorizontal('+');
                 playerPosition();
+                actualAnimation = playerRightRun ;
             }
+
             if(window.keyboardInputManager.reset)//todo add to documentatie
             {
                 playerYCoord=Map.map1.startY()*48;
                 playerXCoord=0;
+                actualAnimation = playerStandAnimation;
             }
+
+            if(!window.keyboardInputManager.anyMovementKeyPressed())
+            {
+                actualAnimation = playerStandAnimation;
+            }
+
+            actualAnimation.runAnimation();
         }
     }
 
@@ -331,18 +370,14 @@ public class Game implements Runnable {
         //System.out.println(window.keyboardInputManager == window.windowFrame.getKeyListeners()[0]);
 
 
-
-        int a = playerMatrixX;
-        int b = playerMatrixY;
-        int c = playerXCoord;
-        int d = playerYCoord;
         //graphics.drawRect(0,0,1440,768);
         //graphics.setColor(Color.black);
         //graphics.fillRect(0,0,1440,768);
         //playerPosition();
         graphics.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
+        actualAnimation.drawAnimation(graphics,playerXCoord,playerYCoord,Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
         graphics.drawRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
-        graphics.fillRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
+        //graphics.fillRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
         //graphics.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
 
 

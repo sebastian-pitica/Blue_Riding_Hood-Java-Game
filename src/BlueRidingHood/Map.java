@@ -1,6 +1,6 @@
 package BlueRidingHood;
 
-public class Map  {
+public class Map  {//todo player pos si eneime pos
 
     public static final Map map1 = new Map(1);
     public static final Map map2 = new Map(2);

@@ -1,4 +1,4 @@
 package BlueRidingHood.Entities;
 
-public interface Entity {// TODO: 24.03.2022
+public interface Entity {// TODO: ai pentru movement
 }
