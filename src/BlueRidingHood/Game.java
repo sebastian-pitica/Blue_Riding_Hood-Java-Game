@@ -85,11 +85,21 @@ public class Game implements Runnable {
         runState = false;
     }
 
+    private boolean checkActualPosition(int xss, int yss)//todo alta versiune
+    {
+        int xdjIdeal=(playerMatrixX+1)*48;
+        int ydjIdeal=(playerMatrixY+1)*48;
+        int xdjReal=xss+48;
+        int ydjReal=yss+48;
+        return xdjReal<=xdjIdeal && ydjReal<=ydjIdeal;
+    }
+
     //todo functie care upgradeaza x si y in matrice in functie de pasi
 
     private void playerPosition()
     {
         System.out.print("\nx: "+playerXCoord+", y: "+playerYCoord+"\nmatx: "+playerMatrixX+", maty: "+playerMatrixY+"\n");
+        System.out.println("Correct?: "+checkActualPosition(playerXCoord,playerYCoord));
         System.out.println("x%48= "+playerXCoord%48);
         System.out.println("x/48= "+playerXCoord/48);
         System.out.println("y%48= "+playerYCoord%48);
@@ -332,6 +342,7 @@ public class Game implements Runnable {
         //playerPosition();
         graphics.drawImage(Assets.maps[0], 0, 0,1440, 768, null);
         graphics.drawRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
+        graphics.fillRect(playerXCoord,playerYCoord,Tile.TILE_WIDTH,Tile.TILE_HEIGHT);
         //graphics.drawRect(0 * Tile.TILE_WIDTH, 10 * 48, 48, Tile.TILE_HEIGHT);
 
 
