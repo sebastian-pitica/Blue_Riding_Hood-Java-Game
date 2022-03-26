@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Animation {
-    //clasa preluata din proiectul SunnyLand de Paval Mihaela Irina (2019-2020)
+    //clasa preluata din proiectul SunnyLand, relizat de Paval Mihaela Irina (2019-2020), cu acord de utilizare
 
     private int speed;
     private int frames;
