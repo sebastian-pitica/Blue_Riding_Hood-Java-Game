@@ -9,14 +9,14 @@ public class KeyboardInputManager implements KeyListener {
 
     public Boolean up, down, left, right;
     public Boolean swordAttack, iceAttack, shieldActivated;
-    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, quit;
-    public String lastMovementDirection ="right", lastMovementKeYPressed="right";
+    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, grid, quit;
+    public String lastHorizontalDirection ="right", lastMovementKeYPressed="right";
 
     public KeyboardInputManager()
     {
         up = down = left = right = swordAttack = iceAttack =
                   shieldActivated = escape = GODModeOn = resetHitCounter =
-                        killAllEnemies =reset = rectangular = quit = false;
+                        killAllEnemies =reset = rectangular = quit = grid = false;
     }
 
     @Override
@@ -36,13 +36,13 @@ public class KeyboardInputManager implements KeyListener {
         if(keyPressedCode == KeyEvent.VK_A)
         {
             left = true;
-            lastMovementDirection ="left";
+            lastHorizontalDirection ="left";
             lastMovementKeYPressed="left";
         }
         if(keyPressedCode == KeyEvent.VK_D)
         {
             right = true;
-            lastMovementDirection ="right";
+            lastHorizontalDirection ="right";
             lastMovementKeYPressed="right";
         }
         if(keyPressedCode == KeyEvent.VK_R)
@@ -60,10 +60,22 @@ public class KeyboardInputManager implements KeyListener {
                 rectangular = true;
             }
         }
+        if(keyPressedCode == KeyEvent.VK_G)
+        {
+            if(grid)
+            {
+                grid = false;
+            }
+            else
+            {
+                grid = true;
+            }
+        }
 
 
 
-        if(keyPressedCode == KeyEvent.VK_F)
+
+        if(keyPressedCode == KeyEvent.VK_SPACE)
         {
             swordAttack=true;
         }
@@ -127,7 +139,7 @@ public class KeyboardInputManager implements KeyListener {
         }
 
 
-        if(keyReleasedCode == KeyEvent.VK_F)
+        if(keyReleasedCode == KeyEvent.VK_SPACE)
         {
             swordAttack=false;
         }
@@ -160,6 +172,7 @@ public class KeyboardInputManager implements KeyListener {
     }
 
     public boolean anyMovementKeyPressed()
+            //verifica daca a fost apasat vreo tasta de miscare
     {
         return up || down || left || right;     }
 

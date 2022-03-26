@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
     \brief Retine toate dalele intr-un vector si ofera posibilitatea regasirii dupa un id.
  */
 public class Tile { // TODO: 24.03.2022
-    public static final int TILE_WIDTH = 48;                       /*!< Latimea unei dale.*/
-    public static final int TILE_HEIGHT = 48;                       /*!< Inaltimea unei dale.*/
+    public static final int TILE_WIDTH = 64;                       /*!< Latimea unei dale.*/
+    public static final int TILE_HEIGHT = 64;                       /*!< Inaltimea unei dale.*/
     private static final int NO_TILES = 32;
     public static Tile[] tiles = new Tile[NO_TILES];       /*!< Vector de referinte de tipuri de dale.*/
     /// De remarcat ca urmatoarele dale sunt statice si publice. Acest lucru imi permite sa le am incarcate

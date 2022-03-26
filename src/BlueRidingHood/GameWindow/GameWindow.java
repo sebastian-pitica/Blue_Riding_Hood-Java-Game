@@ -1,6 +1,7 @@
 package BlueRidingHood.GameWindow;
 
 import BlueRidingHood.InputManager.KeyboardInputManager;
+import BlueRidingHood.Tiles.Tile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,12 +13,13 @@ import java.awt.*;
     ferestre grafice si totodata si cea a unui container (toate elementele
     grafice vor fi continute de fereastra).
  */
-public class GameWindow { //todo check but no touch
-    public JFrame windowFrame;       /*!< fereastra principala a jocului*///todo vezi daca ramen public
+public class GameWindow {
+    private JFrame windowFrame;       /*!< fereastra principala a jocului*///
     private final String windowTitle;       /*!< titlul ferestrei*/
     private final int windowWidth;       /*!< latimea ferestrei in pixeli*/
     private final int windowHeight;      /*!< inaltimea ferestrei in pixeli*/
-    public KeyboardInputManager keyboardInputManager;
+    private KeyboardInputManager keyboardInputManager; //managerul de keyboar input
+    //todo managerul de mouse input
 
     private Canvas canvas;         /*!< "panza/tablou" in care se poate desena*/
 
@@ -33,10 +35,11 @@ public class GameWindow { //todo check but no touch
             \param width Latimea ferestrei in pixeli.
             \param height Inaltimea ferestrei in pixeli.
          */
+    //modificat
     public GameWindow() {
         windowTitle = "BlueRidingHood";    /*!< Retine titlul ferestrei.*/
-        windowWidth = 1440;    /*!< Retine latimea ferestrei.*/
-        windowHeight = 768;   /*!< Retine inaltimea ferestrei.*/
+        windowWidth = 30*Tile.TILE_WIDTH ;    /*!< Retine latimea ferestrei.*/ //1920
+        windowHeight = 16*Tile.TILE_HEIGHT;   /*!< Retine inaltimea ferestrei.*/ //1024
         windowFrame = null;     /*!< Fereastra nu este construita.*/
     }
 
@@ -46,6 +49,7 @@ public class GameWindow { //todo check but no touch
         inchidere, invalideaza redimensionarea ferestrei, afiseaza fereastra.
 
      */
+    //modificat
     public void BuildGameWindow() {
         /// Daca fereastra a mai fost construita intr-un apel anterior
         /// se renunta la apel
@@ -78,6 +82,9 @@ public class GameWindow { //todo check but no touch
         keyboardInputManager = new KeyboardInputManager();
         windowFrame.addKeyListener(keyboardInputManager);
         windowFrame.setFocusable(true);
+        windowFrame.requestFocusInWindow();
+        //adaug un input manager pentru tastatura
+        //setez focusul pe fereastra
 
         /// Creaza obiectul de tip canvas (panza) pe care se poate desena.
         canvas = new Canvas();
@@ -120,5 +127,15 @@ public class GameWindow { //todo check but no touch
      */
     public Canvas GetCanvas() {
         return canvas;
+    }
+
+    public JFrame getWindowFrame()
+    {
+        return windowFrame;
+    }
+
+    public KeyboardInputManager getKeyboardInputManager()
+    {
+        return  keyboardInputManager;
     }
 }

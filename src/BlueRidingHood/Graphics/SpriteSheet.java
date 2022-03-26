@@ -38,7 +38,7 @@ public class SpriteSheet {
         return spriteSheet.getSubimage(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
     }
 
-    //MODIFICARE!
+    //supraincarcat
     public BufferedImage crop(int x, int y, int tileWidth,int tileHeight ) {
         /// Subimaginea (dala) este regasita in sprite sheet specificad coltul stanga sus
         /// al imaginii si apoi latimea si inaltimea (totul in pixeli). Coltul din stanga sus al imaginii

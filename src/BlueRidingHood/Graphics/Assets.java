@@ -10,7 +10,6 @@ import java.awt.*;
  */
 public class Assets {
 
-    /// Referinte catre elementele grafice (dale) utilizate in joc.
     public static BufferedImage[] maps = new BufferedImage[2];
 
     public static BufferedImage[] playerRightStand = new BufferedImage[4];
@@ -71,7 +70,12 @@ public class Assets {
     public static BufferedImage[] wolfUp = new BufferedImage[4];
     public static BufferedImage[] wolfDown = new BufferedImage[4];
 
-    
+    public static BufferedImage[] coin = new BufferedImage[8];
+
+    // TODO: butoane gui
+    // TODO: sprite atacuri
+    //todo sprite monede
+
     /*! \fn public static void Init()
         \brief Functia initializaza referintele catre elementele grafice utilizate.
 
@@ -90,15 +94,14 @@ public class Assets {
         SpriteSheet fox2 = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/vulpe2.png"));
         SpriteSheet zaWalfo = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/zawalfo.png"));
         SpriteSheet wolf = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/garda.png"));
+        SpriteSheet coinSheet = new SpriteSheet(ImageLoader.LoadImage("/textures/map/moneda.png"));
 
-        // TODO: 23.03.2022 butoane sprites loaf
-        // TODO: 23.03.2022 atac foc gheata  sprites load
-        
         maps[0] = ImageLoader.LoadImage("/textures/map/firstmap2.png");
         maps[1] = ImageLoader.LoadImage("/textures/map/secondmap2.png");
 
-        int i=0;  //TODO vezi daca aici iti incarca sprite urile posibil de la acolade sa nu
-        //player
+        int i=0;
+
+        //player sprites load
         {
             for (int j = 0; j < 4; ++j, ++i) {
                 playerRightStand[j] = player.crop(i, 0, 48, 48);
@@ -148,7 +151,8 @@ public class Assets {
                 playerLeftShieldAttackIce[j] = getFlippedImage(playerRightShieldAttackIce[j]);
             }
         }
-        //zawalfo&wolf
+
+        //zawalfo&wolf sprites load
         {
             i=0;
             for(int j=0;j<3;++j)
@@ -179,7 +183,8 @@ public class Assets {
             }
 
         }
-        //fox1&2
+
+        //fox1&2 sprites load
         {
             i=0;
             for(int j=0;j<2;++j)
@@ -210,7 +215,8 @@ public class Assets {
             }
 
         }
-        //bear1&2
+
+        //bear1&2 sprites load
         {
             i=0;
             for(int j=0;j<2;++j)
@@ -242,9 +248,19 @@ public class Assets {
 
         }
 
+        i=0;
+        {
+            for(int j=0;j<8;++j)
+            {
+                coin[j] = coinSheet.crop(j,i,16,16);
+            }
+        }
+
     }
 
     public static BufferedImage getFlippedImage(BufferedImage image) {
+        //functie ce face flip vertical al unei imagini
+        //sursa: https://tousu.in/qa/?qa=1154932/
         BufferedImage flipped = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
         AffineTransform tran = AffineTransform.getTranslateInstance(image.getWidth(), 0);
         AffineTransform flip = AffineTransform.getScaleInstance(-1d, 1d);
@@ -254,6 +270,6 @@ public class Assets {
         g.drawImage(image, 0, 0, null);
         g.dispose();
         return flipped;
-        //https://tousu.in/qa/?qa=1154932/
+
     }
 }

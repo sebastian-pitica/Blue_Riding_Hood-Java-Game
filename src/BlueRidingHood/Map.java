@@ -1,45 +1,57 @@
 package BlueRidingHood;
 
-public class Map  {//todo player pos si eneime pos pe mapa set+metode de a verifica etc
-    //todo stopgame player finish position result
-    //todo player start/stop position
+public class Map  {
+    //todo pozitie player, pozitie inamici, check, return, etc
+    //todo remove coin from print
 
     public static final Map map1 = new Map(1);
     public static final Map map2 = new Map(2);
 
-    private int[][] matrix = new int[32][60];
-    private final int mapNr;
+    private int[][] matrix;
+    private int[] coin;
+    //harta in format informatie
 
-    boolean canAdvance(int coloana, int rand)
+    public final int mapNr;
+    //indicele hartii
+
+    boolean canAdvance(int x, int y)
+        //functie ce returneaza daca pe pozitia matriceala x,y se poate inainta
+        //y de pe ecran in matrice este indicele pentru rand
+        //x de pe ecran in matrice este indicele pentru coloana
     {
-        if(rand>=0 && coloana>=0) { //todo rename coloana rand dupa o logica mai cu sens cu x si y
-            int testValue = matrix[rand][coloana];
-            return matrix[rand][coloana] == 1;
+        if(y>=0 && x >=0) {
+            int testValue = matrix[y][x];
+            return matrix[y][x] == 1 || matrix[y][x]==3;
         }
         else
             return false;
 
     }
 
-    boolean canKill(int rand, int coloana)
+    boolean canKill(int x, int y)
+        //functie ce ofera returneaza daca pe pozitia matriceala x,y se afla un element de instant death
+        //y de pe ecran in matrice este indicele pentru rand
+        //x de pe ecran in matrice este indicele pentru coloana
     {
-        return matrix[rand][coloana] == 3;
+        return matrix[y][x] == 3;
     }
 
-    int endY()
+    boolean end(int x, int y)
+    //functie ce returneaza daca pe pozitia matriceala x,y se afla finalul hartii
+    //y de pe ecran in matrice este indicele pentru rand
+    //x de pe ecran in matrice este indicele pentru coloana
     {
-        if(mapNr == 1)
-        {
-            return 14;
+        if(y>=0 && x >=0) {
+            boolean testValue = y==endY() && x==29;
+            return y==endY() && x==29;
         }
         else
-        {
-            return 12;
-        }
+            return false;
 
     }
 
     int startY()
+    //functie ce furnizeaza pozitia, de start, matriceala a lui y, in functi de harata
     {
         if(mapNr == 1)
         {
@@ -52,7 +64,23 @@ public class Map  {//todo player pos si eneime pos pe mapa set+metode de a verif
 
     }
 
+
+    int endY()
+        //functie ce furnizeaza pozitia, de final, matriceala a lui y, in functi de harata
+    {
+        if(mapNr == 1)
+        {
+            return 14;
+        }
+        else
+        {
+            return 12;
+        }
+
+    }
+
     public void testMap()
+        //functie de afisare a mapei in format matriceal
     {
         for(int i=0;i<16;++i)
         {
@@ -79,7 +107,7 @@ public class Map  {//todo player pos si eneime pos pe mapa set+metode de a verif
     private Map(int mapNumber) {
         this.mapNr = mapNumber;
         if(mapNumber ==1) {
-            int[][] matrix = {
+            this.matrix = new int[][]{
                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                     {0,3,3,3,1,1,1,1,1,1,0,3,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,0,3,0},
                     {0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,0,0,0,1,0,1,0,3,0},
@@ -88,7 +116,7 @@ public class Map  {//todo player pos si eneime pos pe mapa set+metode de a verif
                     {0,1,1,1,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0},
                     {0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,1,1,0},
                     {0,3,0,1,0,1,1,1,0,3,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0},
-                    {0,3,0,1,1,1,0,1,0,1,0,1,0,0,0,0,0,3,0,0,0,0,1,0,1,1,1,0,3,0},
+                    {0,3,0,1,1,3,0,1,0,1,0,1,0,0,0,0,0,3,0,0,0,0,1,0,1,1,1,0,3,0},
                     {0,3,0,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0},
                     {1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0},
                     {0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0},
@@ -96,30 +124,64 @@ public class Map  {//todo player pos si eneime pos pe mapa set+metode de a verif
                     {0,0,0,1,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,0},
                     {0,3,3,3,0,1,1,1,0,3,0,0,1,1,1,1,1,1,1,1,0,1,1,3,0,0,1,1,1,1},
                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-            this.matrix = matrix;
+            this.coin = new int[]{104,109,117,121,126,213,301,305,320,428,519,624,627,706,707,713,715,809,915,921,928,105,1110,1323,146,1412,1417,1422};
         }
         else
         {
-            int[][] matrix = {
+            this.matrix = new int[][]{
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                            {0,1,0,1,1,1,1,3,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,3,3,3,0},
-                            {0,1,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0},
+                            {0,3,0,1,1,1,1,3,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,3,3,3,0},
+                            {0,3,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0},
                             {0,1,1,1,1,1,1,1,1,1,0,1,0,3,1,1,0,1,0,3,1,1,1,1,1,0,1,0,1,0},
                             {0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0},
                             {0,1,0,1,0,3,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,1,0},
                             {0,1,0,1,1,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1,1,0,1,1,3,0},
                             {0,3,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,3,0,1,1,1,1,0,1,1,1,0,0,0},
-                            {1,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,3,0},
-                            {0,1,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,3,0},
+                            {1,1,1,1,1,1,0,0,0,0,0,3,0,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,3,0},
+                            {0,1,0,0,0,1,1,1,1,1,1,3,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,3,0},
                             {0,1,1,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,3,1,0,0,0,0,1,0,1,0,3,0},
                             {0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,1,1,0},
                             {0,1,1,1,1,1,0,1,0,0,1,0,1,1,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1},
                             {0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0},
-                            {0,1,1,1,1,1,1,1,0,0,0,0,3,0,3,3,3,1,1,1,0,0,0,0,1,1,1,1,3,0},
+                            {0,3,1,1,1,1,1,1,0,0,0,0,3,0,3,3,3,1,1,1,0,0,0,0,1,1,1,1,3,0},
                             {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
-            this.matrix = matrix;
+            this.coin = new int[]{103,120,226,311,314,320,328,413,528,601,605,624,627,707,716,817,907,910,921,1005,1019,1110,1121,1201,1312,1402,1407,1427};
         }
 
+        //legenda elemente matrice
+        //1=deplasabil
+        //0=nedeplasabil
+        //3=instant death
+        //2=pozitia jucatorului //todo
+        //4=poztiei inamici //todo
+        //5=pozitie monede //todo
 
+    }
+
+    public int getCoinPositionAtIndex(int index)
+    {
+        if(index<28)
+        {
+            return coin[index];
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    public boolean coinPositionCheck(int y, int x)
+    {
+        int data = y*100+x;
+
+        for(int i=0;i<28;++i)
+        {
+            if(data == coin[i])
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

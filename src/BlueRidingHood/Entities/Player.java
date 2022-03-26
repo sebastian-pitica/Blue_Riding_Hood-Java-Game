@@ -3,10 +3,11 @@ package BlueRidingHood.Entities;
 import BlueRidingHood.Graphics.Animation;
 import BlueRidingHood.Graphics.Assets;
 
-public class Player implements Entity{ //todo add other atributes methods
-    public int xCoord, yCoord, matrixX, matrixY;
-    public int speed, stepSize;
-    public boolean shieldActive, attackActive;
+public class Player implements Entity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
+    //todo counter monede, scor
+    public int xCoord, yCoord, matrixX, matrixY; //cordonatele carteziene si matriceale ale jucatorului
+    public int speed, stepSize; //viteza jucatorului, marimea unui pas
+    public boolean shieldActive, attackActive; //todo add other flags
     public Animation leftStand, rightStand, leftRun, rightRun;
     public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttackSword, rightAttackSword;
     public Animation leftAttackIce, rightAttacIce;
