@@ -7,6 +7,8 @@ import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Tiles.Tile;
 
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.util.Objects;
 
@@ -173,6 +175,7 @@ public class Game implements Runnable {
         /// Este construita fereastra grafica.
         gameWindow.BuildGameWindow();
         /// Se incarca toate elementele grafice (dale)
+        gameWindow.windowFrame.addWindowListener(new WindowAdapter() {public void windowClosing(WindowEvent e) {StopGame();System.exit(0);}});
         Assets.Init();
         player = new Player(0,Map.map1.startY()*48,0,Map.map1.startY(),4,2);
         currentPlayerAnimation = player.rightStand;
@@ -220,6 +223,7 @@ public class Game implements Runnable {
      */
     public synchronized void StartGame() //todo check but not touch
     {
+        System.out.println("Game started!");
         if (!runState) {
             /// Se actualizeaza flagul de stare a threadului
             runState = true;
@@ -256,6 +260,7 @@ public class Game implements Runnable {
         Metoda trebuie sa fie declarata synchronized pentru ca apelul acesteia sa fie semaforizat.
      */
     public synchronized void StopGame() {
+        System.out.println("Game stoped!");
         if (runState) {
             /// Actualizare stare thread
             runState = false;
@@ -294,6 +299,7 @@ public class Game implements Runnable {
 
     private void playerInputHandler()
     {
+        //todo creaza o variabila beyboardinput handler care sa fie egala cu acel handler sa nu scrii in if atatea cuvinte
         if (gameWindow.keyboardInputManager.up) {
             stepVertical('-');
             displayPlayerPosition();
@@ -318,6 +324,12 @@ public class Game implements Runnable {
             player.yCoord=Map.map1.startY()*48;
             player.xCoord=0;
 
+        }
+
+        if(gameWindow.keyboardInputManager.quit)//todo close window
+        {
+            //StopGame();
+            //System.exit(0);
         }
 
     }
@@ -393,6 +405,64 @@ public class Game implements Runnable {
                     else
                     {
                         result = player.rightShieldStand;
+                    }
+                }
+            }
+        }
+
+        if(gameWindow.keyboardInputManager.swordAttack) {
+            if (player.attackActive) {
+                if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "left")) {
+                    if (!player.shieldActive) {
+                        result = player.leftAttackSword;
+                    } else {
+                        result = player.leftShieldAttackSword;
+                    }
+                } else {
+                    if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "right")) {
+                        if (!player.shieldActive) {
+                            result = player.rightAttackSword;
+                        } else {
+                            result = player.rightShieldAttackSword;
+                        }
+                    }
+                }
+            } else {
+                player.attackActive = true;
+                if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "left")) {
+                    if (!player.shieldActive) {
+                        result = player.leftDrawSword;
+                    } else {
+                        result = player.leftShieldDrawSword;
+                    }
+                } else {
+                    if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "right")) {
+                        if (!player.shieldActive) {
+                            result = player.rightDrawSword;
+                        } else {
+                            result = player.rightShieldDrawSword;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            if(player.attackActive) {
+                player.attackActive = false;
+                if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "left")) {
+                    if (!player.shieldActive) {
+                        result = player.leftRetractSword;
+                    } else {
+                        result = player.leftShieldRetractSword;
+                    }
+                } else {
+                    if (Objects.equals(gameWindow.keyboardInputManager.lastMovementDirection, "right")) {
+                        if (!player.shieldActive) {
+                            result = player.rightRetractSword;
+                        } else {
+                            result = player.rightShieldRetractSword;
+                        }
                     }
                 }
             }

@@ -9,14 +9,14 @@ public class KeyboardInputManager implements KeyListener {
 
     public Boolean up, down, left, right;
     public Boolean swordAttack, iceAttack, shieldActivated;
-    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular;
+    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, quit;
     public String lastMovementDirection ="right", lastMovementKeYPressed="right";
 
     public KeyboardInputManager()
     {
         up = down = left = right = swordAttack = iceAttack =
                   shieldActivated = escape = GODModeOn = resetHitCounter =
-                        killAllEnemies =reset = rectangular = false;
+                        killAllEnemies =reset = rectangular = quit = false;
     }
 
     @Override
@@ -74,6 +74,10 @@ public class KeyboardInputManager implements KeyListener {
         if(keyPressedCode == KeyEvent.VK_Q)
         {
             shieldActivated = true;
+        }
+        if(keyPressedCode == KeyEvent.VK_P)
+        {
+            quit = true;
         }
 
         if(keyPressedCode == KeyEvent.VK_F10)

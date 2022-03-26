@@ -6,7 +6,7 @@ import BlueRidingHood.Graphics.Assets;
 public class Player implements Entity{ //todo add other atributes methods
     public int xCoord, yCoord, matrixX, matrixY;
     public int speed, stepSize;
-    public boolean shieldActive;
+    public boolean shieldActive, attackActive;
     public Animation leftStand, rightStand, leftRun, rightRun;
     public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttackSword, rightAttackSword;
     public Animation leftAttackIce, rightAttacIce;
@@ -22,7 +22,7 @@ public class Player implements Entity{ //todo add other atributes methods
         this.yCoord = playerYCoord;
         this.speed = speed;
         this.stepSize =stepSize;
-        shieldActive = false;
+        shieldActive = attackActive = false;
 
        animationInit();
     }
@@ -36,8 +36,8 @@ public class Player implements Entity{ //todo add other atributes methods
         rightDrawSword = new Animation(speed,Assets.playerRightDrawSword);
         rightRetractSword = new Animation(speed, Assets.playerRightRetractSword);
         leftRetractSword = new Animation(speed,Assets.playerLeftRetractSword);
-        leftAttackSword = new Animation(speed, Assets.playerRightAttackSword);
-        rightAttackSword = new Animation(speed, Assets.playerLeftAttackSword);
+        leftAttackSword = new Animation(speed, Assets.playerLeftAttackSword);
+        rightAttackSword = new Animation(speed, Assets.playerRightAttackSword);
         leftAttackIce = new Animation(speed, Assets.playerLeftAttackIce);
         rightAttacIce = new Animation(speed,Assets.playerRightAttackIce);
 
@@ -49,8 +49,8 @@ public class Player implements Entity{ //todo add other atributes methods
         rightShieldDrawSword = new Animation(speed,Assets.playerRightShieldDrawSword);
         rightShieldRetractSword = new Animation(speed, Assets.playerRightShieldRetractSword);
         leftShieldRetractSword = new Animation(speed,Assets.playerLeftShieldRetractSword);
-        leftShieldAttackSword = new Animation(speed, Assets.playerRightShieldAttackSword);
-        rightShieldAttackSword = new Animation(speed, Assets.playerLeftShieldAttackSword);
+        leftShieldAttackSword = new Animation(speed, Assets.playerLeftShieldAttackSword);
+        rightShieldAttackSword = new Animation(speed, Assets.playerRightShieldAttackSword);
         leftShieldAttackIce = new Animation(speed, Assets.playerLeftShieldAttackIce);
         rightShieldAttacIce = new Animation(speed,Assets.playerRightShieldAttackIce);
     }
