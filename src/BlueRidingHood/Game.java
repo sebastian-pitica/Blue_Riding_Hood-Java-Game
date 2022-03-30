@@ -666,8 +666,11 @@ public class Game implements Runnable {
         {
             int y = currentMap.getCoinPositionAtIndex(i)/100;
             int x = currentMap.getCoinPositionAtIndex(i)%100;
-            coinsAnimations[i].drawAnimation(g,x*Tile.TILE_WIDTH+Tile.TILE_WIDTH/2-8,
-                    y* Tile.TILE_HEIGHT+Tile.TILE_HEIGHT/2-8,16,16);
+
+            if(x>=0 && y>=0) {
+                coinsAnimations[i].drawAnimation(g, x * Tile.TILE_WIDTH + Tile.TILE_WIDTH / 2 - 8,
+                        y * Tile.TILE_HEIGHT + Tile.TILE_HEIGHT / 2 - 8, 16, 16);
+            }
         }
     }
 

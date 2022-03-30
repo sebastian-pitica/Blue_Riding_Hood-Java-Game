@@ -176,6 +176,11 @@ public class Map  {
 
         for(int i=0;i<28;++i)
         {
+            if(data<coin[i])
+            {
+                break;
+            }
+
             if(data == coin[i])
             {
                 return true;
