@@ -17,28 +17,28 @@ public class Assets {
     public static BufferedImage[] playerRightRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerRightDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerRightAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerRightAttackIce = new BufferedImage[8];
+    public static BufferedImage[] playerRightAttackIce = new BufferedImage[9];
 
     public static BufferedImage[] playerRightShieldStand = new BufferedImage[4];
     public static BufferedImage[] playerRightShieldRun = new BufferedImage[6];
     public static BufferedImage[] playerRightShieldRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerRightShieldDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerRightShieldAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerRightShieldAttackIce = new BufferedImage[8];
+    public static BufferedImage[] playerRightShieldAttackIce = new BufferedImage[9];
 
     public static BufferedImage[] playerLeftStand = new BufferedImage[4];
     public static BufferedImage[] playerLeftRun = new BufferedImage[6];
     public static BufferedImage[] playerLeftRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[8];
+    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[9];
 
     public static BufferedImage[] playerLeftShieldStand = new BufferedImage[4];
     public static BufferedImage[] playerLeftShieldRun = new BufferedImage[6];
     public static BufferedImage[] playerLeftShieldRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftShieldDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftShieldAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[8];
+    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[9];
 
     public static BufferedImage[] bear1Left = new BufferedImage[3];
     public static BufferedImage[] bear1Right = new BufferedImage[3];
@@ -143,7 +143,7 @@ public class Assets {
                 playerLeftShieldAttackSword[j] = getFlippedImage(playerRightShieldAttackSword[j]);
             }
 
-            for (int j = 0; j < 8; ++j, ++i) {
+            for (int j = 0; j < 9; ++j, ++i) {
                 playerRightAttackIce[j] = player.crop(i, 0, 48, 48);
                 playerRightShieldAttackIce[j] = playerShield.crop(i, 0, 48, 48);
 
