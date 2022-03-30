@@ -387,6 +387,7 @@ public class Game implements Runnable {
         player.matrixY = (player.yCoord+Tile.TILE_HEIGHT/2) / Tile.TILE_HEIGHT;
 
         if( currentMap.canKill(player.matrixX, player.matrixY))
+            //todo move this from here! make another function for it!
         //todo kill the player
             //daca jucatorul ajunge pe un camp insta kill este teleportat pe pozitia initiala
         {
