@@ -213,6 +213,9 @@ public class Game implements Runnable {
             return;
         }
 
+        //todo
+        //System.exit(0);
+
     }//todo check utility
 
     /*! \fn private void Update()
@@ -277,8 +280,8 @@ public class Game implements Runnable {
 
         if(keyboardInputManager.quit)//todo close window + close game
         {
-            StopGame();
-            System.exit(0);
+            //todo
+            //StopGame();
         }
 
     }
@@ -298,8 +301,8 @@ public class Game implements Runnable {
         }
         else
         {
-            StopGame();
-            System.exit(0);
+            //todo
+            //StopGame();
         }
     }
 
