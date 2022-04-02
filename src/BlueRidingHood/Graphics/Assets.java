@@ -1,7 +1,8 @@
 package BlueRidingHood.Graphics;
+
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.*;
 
 /*! \class public class Assets
     \brief Clasa incarca fiecare element grafic necesar jocului.

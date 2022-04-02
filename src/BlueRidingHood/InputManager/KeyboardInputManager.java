@@ -12,7 +12,18 @@ public class KeyboardInputManager implements KeyListener {
     public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, grid, quit;
     public String lastHorizontalDirection ="right", lastMovementKeYPressed="right";
 
-    public KeyboardInputManager()
+    protected static KeyboardInputManager keyboardInputManager=null;
+
+    public static KeyboardInputManager provideKeyboardInputManager()
+    {
+        if(keyboardInputManager == null)
+        {
+            keyboardInputManager =  new KeyboardInputManager();
+        }
+            return keyboardInputManager;
+    }
+
+    protected KeyboardInputManager()
     {
         up = down = left = right = swordAttack = iceAttack =
                   shieldActivated = escape = GODModeOn = resetHitCounter =

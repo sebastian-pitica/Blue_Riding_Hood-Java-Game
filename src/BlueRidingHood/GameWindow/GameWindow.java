@@ -1,7 +1,7 @@
 package BlueRidingHood.GameWindow;
 
+import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.InputManager.KeyboardInputManager;
-import BlueRidingHood.Tiles.Tile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +18,6 @@ public class GameWindow {
     private final String windowTitle;       /*!< titlul ferestrei*/
     private final int windowWidth;       /*!< latimea ferestrei in pixeli*/
     private final int windowHeight;      /*!< inaltimea ferestrei in pixeli*/
-    private KeyboardInputManager keyboardInputManager; //managerul de keyboar input
     //todo managerul de mouse input
 
     private Canvas canvas;         /*!< "panza/tablou" in care se poate desena*/
@@ -79,7 +78,8 @@ public class GameWindow {
         /// care trebuie setata aceasta proprietate
         windowFrame.setVisible(true);
 
-        keyboardInputManager = new KeyboardInputManager();
+        //managerul de keyboar input
+        KeyboardInputManager keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
         windowFrame.addKeyListener(keyboardInputManager);
         windowFrame.setFocusable(true);
         windowFrame.requestFocusInWindow();
@@ -134,8 +134,4 @@ public class GameWindow {
         return windowFrame;
     }
 
-    public KeyboardInputManager getKeyboardInputManager()
-    {
-        return  keyboardInputManager;
-    }
 }

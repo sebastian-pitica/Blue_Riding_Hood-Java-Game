@@ -1,8 +1,6 @@
 package BlueRidingHood;
 
-import BlueRidingHood.Graphics.Assets;
-
-import java.io.IOException;
+import BlueRidingHood.Game.Game;
 
 public class Main {
     //todo try catch cazuri de eraore etc!!!, if else fara inca un if
@@ -17,7 +15,7 @@ public class Main {
     //todo game stop fara imposibilitate de inchidere ferestra
     public static void main(String[] args) {
        // Map.map1.testMap();
-        Game BlueRidingHood = new Game();
+        Game BlueRidingHood = Game.provideGame();
         BlueRidingHood.StartGame();
     }
 

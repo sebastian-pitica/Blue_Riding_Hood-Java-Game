@@ -1,4 +1,4 @@
-package BlueRidingHood.Tiles;
+package BlueRidingHood.Graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
