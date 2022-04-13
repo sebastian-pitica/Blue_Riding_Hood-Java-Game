@@ -120,7 +120,7 @@ public class Game implements Runnable {
         Assets.Init();
 
         currentMap = Map.getCurrentMap();
-        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,2);
+        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,4);
         currentPlayerAnimation = player.rightStand; //animatia default
         animationHandler = new AnimationHandler(player);
         inputHandler = new PlayerInputHandler(player);

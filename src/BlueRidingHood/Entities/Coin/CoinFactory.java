@@ -5,6 +5,7 @@ import BlueRidingHood.Map.Map;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Vector;
 
 
 public class CoinFactory {
@@ -22,7 +23,7 @@ public class CoinFactory {
         return factory;
     }
 
-    public Coin[] createCoins(Map currentMap)
+    public Vector<Coin> createCoins(Map currentMap)
     {
 
         LinkedList<Integer> availablePositions = currentMap.getAllAvailablePositions();
@@ -38,7 +39,7 @@ public class CoinFactory {
             actualPositionsToDraw.add(availablePositions.get(randomGenerator.nextInt(length)));
         }
 
-        Coin[] coins = new Coin[28];
+        Vector<Coin> coins = new Vector<>(28);
         int i=0;
 
         for(int position : actualPositionsToDraw)
@@ -47,7 +48,7 @@ public class CoinFactory {
             int x = position%100;
 
             if(x>=0 && y>=0) {
-                coins[i++] = new Coin(x,y);
+                coins.insertElementAt(new Coin(x, y),i++);
             }
         }
 

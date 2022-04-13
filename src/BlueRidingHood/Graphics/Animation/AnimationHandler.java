@@ -9,6 +9,7 @@ import BlueRidingHood.Map.Map;
 
 import java.awt.*;
 import java.util.Objects;
+import java.util.Vector;
 
 public class AnimationHandler {
 
@@ -16,7 +17,7 @@ public class AnimationHandler {
     private final MouseInputManager mouseInputManager;
     private final Player player;
     private Map currentMap;
-    private Coin[] coins;
+    private Vector<Coin> coins;
     private long shieldStartTime;
     //todo other entities animations: monede, inamici, atacuri
     //todo other entities
@@ -232,7 +233,7 @@ public class AnimationHandler {
 
         for (int i = 0; i < 28;++i)
         {
-            coins[i].runAnimation();
+            coins.get(i).runAnimation();
         }
     }
 
@@ -241,7 +242,7 @@ public class AnimationHandler {
     {
         for(int i=0;i<28;++i)
         {
-            coins[i].drawCoin(g);
+            coins.get(i).drawCoin(g);
         }
     }
 }
