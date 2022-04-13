@@ -226,23 +226,50 @@ public class AnimationHandler {
 
     public void runCoinAnimations() {
 
-        if(currentMap != Map.getCurrentMap())
+        checkCoinVector();
+
+        for (Coin element:coins)
         {
-            coinInit();
+            element.runAnimation();
+        }
+    }
+
+    private void checkCoinVector()
+    {
+        if(isCoinAtThisPosition(player.matrixX, player.matrixY))
+        {
+            eliminateCoinAtCoords(player.matrixX, player.matrixY);
         }
 
-        for (int i = 0; i < 28;++i)
+        if(currentMap != Map.getCurrentMap() || coins.size() == 0)
         {
-            coins.get(i).runAnimation();
+            coinInit();
         }
     }
 
     public void drawCoinAnimations(Graphics g) //todo coin disapear
     //todo mark coin pos
     {
-        for(int i=0;i<28;++i)
+        for(Coin element: coins)
         {
-            coins.get(i).drawCoin(g);
+            element.drawCoin(g);
         }
+    }
+
+    private boolean isCoinAtThisPosition(int x, int y)
+    {
+        for(Coin element :coins)
+        {
+            if(element.xCoord == x && element.yCoord == y)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void eliminateCoinAtCoords(int x, int y)
+    {
+        coins.removeIf(element -> element.xCoord == x && element.yCoord == y);
     }
 }

@@ -8,14 +8,15 @@ import java.awt.*;
 
 public class Coin {
 
-    private final int xCoord;
-    private final int yCoord;
-    final private static Animation coinAnimation = new Animation(150, Assets.coin);
+    public final int xCoord;
+    public final int yCoord;
+    final private Animation coinAnimation = new Animation(6, Assets.coin);
 
     public Coin(int x, int y)
     {
         xCoord = x;
         yCoord = y;
+
     }
 
     public void drawCoin(Graphics g)
