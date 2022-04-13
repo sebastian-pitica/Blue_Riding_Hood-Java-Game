@@ -10,7 +10,7 @@ public class Coin {
 
     public final int xCoord;
     public final int yCoord;
-    final private Animation coinAnimation = new Animation(6, Assets.coin);
+    final static private Animation coinAnimation = new Animation(6, Assets.coin);
 
     public Coin(int x, int y)
     {

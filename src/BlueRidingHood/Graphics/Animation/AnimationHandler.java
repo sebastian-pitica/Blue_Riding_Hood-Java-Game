@@ -250,10 +250,8 @@ public class AnimationHandler {
 
         checkCoinVector();
 
-        for (Coin element:coins)
-        {
-            element.runAnimation();
-        }
+        coins.get(0).runAnimation();
+
     }
 
     private void checkCoinVector()

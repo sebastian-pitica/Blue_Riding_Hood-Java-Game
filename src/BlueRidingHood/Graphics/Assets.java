@@ -72,6 +72,8 @@ public class Assets {
     public static BufferedImage[] wolfDown = new BufferedImage[4];
 
     public static BufferedImage[] coin = new BufferedImage[8];
+    public static BufferedImage[] fireAttack = new BufferedImage[20];
+    public static BufferedImage[] iceAttack = new BufferedImage[20];
 
     // TODO: butoane gui
     // TODO: sprite atacuri
@@ -96,6 +98,8 @@ public class Assets {
         SpriteSheet zaWalfo = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/zawalfo.png"));
         SpriteSheet wolf = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/garda.png"));
         SpriteSheet coinSheet = new SpriteSheet(ImageLoader.LoadImage("/textures/map/moneda.png"));
+        SpriteSheet fireAttack = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/foc.png"));
+        SpriteSheet iceAttack = new SpriteSheet(ImageLoader.LoadImage("/textures/characters/gheata.png"));
 
         maps[0] = ImageLoader.LoadImage("/textures/map/firstmap2.png");
         maps[1] = ImageLoader.LoadImage("/textures/map/secondmap2.png");
@@ -107,7 +111,7 @@ public class Assets {
             for (int j = 0; j < 4; ++j, ++i) {
                 playerRightStand[j] = player.crop(i, 0, 48, 48);
                 playerRightShieldStand[j] = playerShield.crop(i, 0, 48, 48);
-                playerLeftStand[j] = getFlippedImage(playerRightStand[j]);
+                playerLeftStand[j] = getRotatedClockwiseImage(playerRightStand[j],"");
                 playerLeftShieldStand[j] = getFlippedImage(playerRightShieldStand[j]);
             }
 
@@ -249,16 +253,27 @@ public class Assets {
 
         }
 
-        i=0;
+        //coin sprites load
         {
+            i=0;
             for(int j=0;j<8;++j)
             {
                 coin[j] = coinSheet.crop(j,i,16,16);
             }
         }
 
+        //fire/ice attack sprites load
+        {
+            i=0;
+           // for()
+            {
+
+            }
+        }
+
     }
 
+    @Deprecated
     public static BufferedImage getFlippedImage(BufferedImage image) {
         //functie ce face flip vertical al unei imagini
         //sursa: https://tousu.in/qa/?qa=1154932/
@@ -272,5 +287,31 @@ public class Assets {
         g.dispose();
         return flipped;
 
+    }
+
+    public static BufferedImage getRotatedClockwiseImage(BufferedImage src, String Direction) {
+        //functie de rotatie preluata si adapta pentru rotatia dupa cadranul trigonometric
+        //sursa: https://stackoverflow.com/questions/20959796/rotate-90-degree-to-right-image-in-java
+
+        int width = src.getWidth();
+        int height = src.getHeight();
+        int directionNr = 0;
+        BufferedImage dest = new BufferedImage(height, width, src.getType());
+
+        switch (Direction)
+        {
+            case "down": directionNr = 1; break;
+            case "left": directionNr = 2; break;
+            case "up": directionNr = 3; break;
+            case "right": directionNr = 4; break;
+            default: directionNr = 4; break;
+        }
+
+        Graphics2D graphics2D = dest.createGraphics();
+        graphics2D.translate((height - width) / 2, (height - width) / 2);
+        graphics2D.rotate((directionNr *Math.PI) / 2, height / 2, width / 2);
+        graphics2D.drawRenderedImage(src, null);
+
+        return dest;
     }
 }
