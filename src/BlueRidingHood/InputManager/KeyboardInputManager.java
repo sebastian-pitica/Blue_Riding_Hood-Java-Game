@@ -9,7 +9,7 @@ public class KeyboardInputManager implements KeyListener {
 
     public Boolean up, down, left, right;
     public Boolean swordAttack, iceAttack, shieldActivated;
-    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, grid, quit;
+    public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, grid, quit, faster;
     public String lastHorizontalDirection ="right", lastMovementKeYPressed="right";
 
     protected static KeyboardInputManager keyboardInputManager=null;
@@ -27,7 +27,7 @@ public class KeyboardInputManager implements KeyListener {
     {
         up = down = left = right = swordAttack = iceAttack =
                   shieldActivated = escape = GODModeOn = resetHitCounter =
-                        killAllEnemies =reset = rectangular = quit = grid = false;
+                        killAllEnemies = faster = reset = rectangular = quit = grid = false;
     }
 
     @Override
@@ -105,7 +105,25 @@ public class KeyboardInputManager implements KeyListener {
 
         if(keyPressedCode == KeyEvent.VK_F10)
         {
-            GODModeOn = true;
+            if(GODModeOn)
+            {
+                GODModeOn = false;
+            }
+            else
+            {
+                GODModeOn = true;
+            }
+        }
+        if(keyPressedCode == KeyEvent.VK_F9)
+        {
+            if(faster)
+            {
+                faster = false;
+            }
+            else
+            {
+                faster = true;
+            }
         }
         if(keyPressedCode == KeyEvent.VK_F11)
         {
@@ -163,10 +181,6 @@ public class KeyboardInputManager implements KeyListener {
             shieldActivated = false;
         }
 
-        if(keyReleasedCode == KeyEvent.VK_F10)
-        {
-            GODModeOn = false;
-        }
         if(keyReleasedCode == KeyEvent.VK_F11)
         {
             resetHitCounter = false;

@@ -30,12 +30,12 @@ public class PlayerInputHandler {
             {
                 if (keyboardInputManager.left) {
                     stepHorizontal('-');
-                    displayPlayerPosition();
+                    player.displayPlayerDetails();
                 }
                 if (keyboardInputManager.right) {
                     if(! currentMap.end(player.matrixX, player.matrixY)) {
                         stepHorizontal('+');
-                        displayPlayerPosition();
+                        player.displayPlayerDetails();
                     }else
                     {
                         win();
@@ -44,12 +44,12 @@ public class PlayerInputHandler {
             } else {
                 if (keyboardInputManager.up) {
                     stepVertical('-');
-                    displayPlayerPosition();
+                    player.displayPlayerDetails();
 
                 }
                 if (keyboardInputManager.down) {
                     stepVertical('+');
-                    displayPlayerPosition();
+                    player.displayPlayerDetails();
 
                 }
             }
@@ -66,6 +66,24 @@ public class PlayerInputHandler {
         {
             //todo
             //StopGame();
+        }
+
+        if(keyboardInputManager.GODModeOn)
+        {
+            player.GODmodeON();
+        }
+        else
+        {
+            player.GODmodeOFF();
+        }
+
+        if(keyboardInputManager.faster)
+        {
+            player.fasterON();
+        }
+        else
+        {
+            player.fasterOFF();
         }
 
     }
@@ -185,10 +203,6 @@ public class PlayerInputHandler {
         //todo other interactions
     }
 
-    private void displayPlayerPosition()
-    //afiseaza pozitia jcuatorului in coordonate x, y si in coordonate matriceale
-    {
-        System.out.print("\nx: "+player.xCoord+", y: "+player.yCoord+"\nmatx: "+player.matrixX+", maty: "+player.matrixY+"\n");
-    }
+    
 
 }

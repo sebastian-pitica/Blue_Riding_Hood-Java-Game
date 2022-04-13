@@ -19,6 +19,7 @@ public class AnimationHandler {
     private Map currentMap;
     private Vector<Coin> coins;
     private long shieldStartTime;
+    private long shieldStopTime;
     //todo other entities animations: monede, inamici, atacuri
     //todo other entities
     //todo possible other time animations: atacuri, etc
@@ -191,19 +192,40 @@ public class AnimationHandler {
 
     public void animationStartTimeHandler() //todo for all animations
     {
-        if(keyboardInputManager.shieldActivated) //daca scutul a fost activat
+        if(keyboardInputManager.shieldActivated &&
+                timeToStartAnimation(shieldStopTime,"shield")) //daca scutul a fost activat
         {
-            player.shieldActive = true; //schimb statusul de activ al scutului pentru player
-            shieldStartTime = System.nanoTime(); //preiau timpul de inceput
+          player.shieldActive = true;
+          shieldStartTime = System.nanoTime();
         }
     }
 
     public void aniomationStopTimeHandler() //todo for all animations
     {
-        if(timeToStopAnimation(shieldStartTime, "shield")) //verific daca este nevoie sa opresc animatia scutului
+        if(player.shieldActive &&
+                timeToStopAnimation(shieldStartTime, "shield")) //verific daca este nevoie sa opresc animatia scutului
         {
             player.shieldActive = false;
+            shieldStopTime = System.nanoTime();
         }
+    }
+
+    private boolean timeToStartAnimation(long stopTime, String animation)
+    {
+        //todo for all timed animation
+        long nowTime = System.nanoTime(); //masor timpul actual
+
+        //todo verific daca e mai mare ca 15 secunde
+        if((nowTime - stopTime)/15 >= 1000000000) //for shield animation switch case
+        //todo variabila cu limita de secunde
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     private boolean timeToStopAnimation(long startTime, String animation)

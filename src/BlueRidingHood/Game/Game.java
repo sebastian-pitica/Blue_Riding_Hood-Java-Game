@@ -120,7 +120,7 @@ public class Game implements Runnable {
         Assets.Init();
 
         currentMap = Map.getCurrentMap();
-        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,8);
+        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,2);
         currentPlayerAnimation = player.rightStand; //animatia default
         animationHandler = new AnimationHandler(player);
         inputHandler = new PlayerInputHandler(player);
@@ -219,7 +219,7 @@ public class Game implements Runnable {
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
     private void Update() {
-        if(gameWindow !=null)
+        if(gameWindow !=null && player.alive())
         //daca exista referinta la fereastra
         {
             //todo vezi daca poti scapa

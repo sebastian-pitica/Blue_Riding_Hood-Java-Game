@@ -3,9 +3,8 @@ package BlueRidingHood.Entities;
 import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Assets;
 
-public class Player implements Entity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
+public class Player extends RangeEntity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
     //todo counter monede, scor
-    public int xCoord, yCoord, matrixX, matrixY; //cordonatele carteziene si matriceale ale jucatorului
     public int speed, stepSize; //viteza jucatorului, marimea unui pas
     public boolean shieldActive, attackActive; //todo add other flags
 
@@ -18,6 +17,10 @@ public class Player implements Entity{ //todo add other atributes, methods ex:hi
 
     public Player(int playerXCoord,int playerYCoord,int playerMatrixX,int playerMatrixY, int speed, int stepSize)
     {
+        this.closeAttackPower = 1;
+        this.rangeAttackPower = 2;
+        this.alive = true;
+        this.attackResistence = 15;
         this.matrixX = playerMatrixX;
         this.matrixY = playerMatrixY;
         this.xCoord = playerXCoord;
@@ -25,9 +28,61 @@ public class Player implements Entity{ //todo add other atributes, methods ex:hi
         this.speed = speed;
         this.stepSize =stepSize;
         shieldActive = attackActive = false;
-
        animationInit();
     }
+
+    @Override
+    public void isHit()
+    {
+        if(++hitCounter > attackResistence)
+        {
+            alive = false;
+        }
+    }
+
+    @Override
+    public boolean alive()
+    {
+        return alive;
+    }
+
+    public void resetHitCounter()
+    {
+        hitCounter = 0;
+    }
+
+    public void GODmodeON()
+    {
+        attackResistence=9999999;
+        rangeAttackPower=9999999;
+        closeAttackPower=9999999;
+    }
+
+    public void GODmodeOFF()
+    {
+        attackResistence = 15;
+        rangeAttackPower = 2;
+        closeAttackPower = 1;
+    }
+
+    public void fasterON()
+    {
+        stepSize = 8;
+    }
+
+    public void fasterOFF()
+    {
+        stepSize = 2;
+    }
+
+    public void displayPlayerDetails()
+    //afiseaza pozitia jcuatorului in coordonate x, y si in coordonate matriceale
+    {
+        System.out.print("\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
+        System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
+                "CloseAttackPower: "+closeAttackPower+", RangeAttackPower: "+rangeAttackPower+"\n");
+    }
+
     private void animationInit()
     {
         leftStand = new Animation(speed, Assets.playerLeftStand);
