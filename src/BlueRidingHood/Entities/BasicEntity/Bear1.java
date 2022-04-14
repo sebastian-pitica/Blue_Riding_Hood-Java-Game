@@ -1,11 +1,14 @@
-package BlueRidingHood.Entities;
+package BlueRidingHood.Entities.BasicEntity;
 
-public class Fox2 extends Entity{// TODO: 24.03.2022
-    public Fox2(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
+import BlueRidingHood.Entities.Entity;
+
+public class Bear1 extends Entity {
+    
+    public Bear1(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
     {
         this.closeAttackPower = 1;
         this.alive = true;
-        this.attackResistence = 7;
+        this.attackResistence = 10;
         this.matrixX = entityMatrixX;
         this.matrixY = entityMatrixY;
         this.xCoord = entityXCoord;

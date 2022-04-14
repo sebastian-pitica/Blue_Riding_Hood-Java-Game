@@ -1,12 +1,13 @@
-package BlueRidingHood.Entities;
+package BlueRidingHood.Entities.BasicEntity;
 
-public class Bear1 extends Entity {
-    
-    public Bear1(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
+import BlueRidingHood.Entities.Entity;
+
+public class Bear2 extends Entity {
+    public Bear2(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
     {
         this.closeAttackPower = 1;
         this.alive = true;
-        this.attackResistence = 10;
+        this.attackResistence = 12;
         this.matrixX = entityMatrixX;
         this.matrixY = entityMatrixY;
         this.xCoord = entityXCoord;

@@ -1,6 +1,6 @@
 package BlueRidingHood.Entities;
 
-public class ZaWalfo extends Entity{
+public class ZaWalfo extends RangeEntity{
 
     static private ZaWalfo zaWalfo = null;
 
@@ -20,7 +20,7 @@ public class ZaWalfo extends Entity{
         return hitCounter;
     }
 
-    protected ZaWalfo() {}
+    protected ZaWalfo() {} //todo
 
     @Override
     public void isHit() {

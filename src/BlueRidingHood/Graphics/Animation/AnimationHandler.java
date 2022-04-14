@@ -1,5 +1,7 @@
 package BlueRidingHood.Graphics.Animation;
 
+import BlueRidingHood.Entities.Attack.FireAttack;
+import BlueRidingHood.Entities.Attack.IceAttack;
 import BlueRidingHood.Entities.Coin.Coin;
 import BlueRidingHood.Entities.Coin.CoinFactory;
 import BlueRidingHood.Entities.Player;
@@ -31,6 +33,13 @@ public class AnimationHandler {
         mouseInputManager = MouseInputManager.provideMouseInputManager();
         this.player = player;
         coinInit();
+        attackInit();
+    }
+
+    private void attackInit()
+    {
+        FireAttack.initAnimation();
+        IceAttack.initAnimation();
     }
 
     private void coinInit()
@@ -331,6 +340,7 @@ public class AnimationHandler {
     {
         if(isCoinAtThisPosition(player.matrixX, player.matrixY))
         {
+            player.addPointsToScore(100);
             eliminateCoinAtCoords(player.matrixX, player.matrixY);
         }
 

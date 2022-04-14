@@ -1,6 +1,8 @@
-package BlueRidingHood.Entities;
+package BlueRidingHood.Entities.BasicEntity;
 
-public class Wolf extends Entity{
+import BlueRidingHood.Entities.Entity;
+
+public class Wolf extends Entity {
     @Override
     public void isHit() {
         hitCounter++;

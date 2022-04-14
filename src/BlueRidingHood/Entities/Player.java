@@ -5,7 +5,9 @@ import BlueRidingHood.Graphics.Assets;
 
 public class Player extends RangeEntity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
     //todo counter monede, scor
-    public int speed, stepSize; //viteza jucatorului, marimea unui pas
+    //todo check singleton
+    //todo score rulles
+    public int speed, stepSize,score = 0; //viteza jucatorului, marimea unui pas
     public boolean shieldActive, swordAttackActive, iceAttackActive; //todo add other flags
 
     public Animation leftStand, rightStand, leftRun, rightRun;
@@ -18,6 +20,11 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
     public Animation leftShieldStartAttackIce,leftShieldStopAttackIce, rightShieldStartAttackIce, rightShieldStopAttackIce,leftShieldAttackIce,rightShieldAttackIce;
 
     public Animation iceAttackUp,iceAttackDown,iceAttackLeft,iceAttackRight;
+
+    public void addPointsToScore(int amount)
+    {
+        score+=amount;
+    }
 
     public Player(int playerXCoord,int playerYCoord,int playerMatrixX,int playerMatrixY, int speed, int stepSize)
     {
@@ -84,7 +91,8 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
     {
         System.out.print("\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
         System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
-                "CloseAttackPower: "+closeAttackPower+", RangeAttackPower: "+rangeAttackPower+"\n");
+                "CloseAttackPower: "+closeAttackPower+", RangeAttackPower: "+rangeAttackPower+"\n"
+        +"Score: "+score+"\n");
     }
 
     private void animationInit()
