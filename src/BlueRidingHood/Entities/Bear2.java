@@ -1,6 +1,6 @@
 package BlueRidingHood.Entities;
 
-public class Bear2 extends Entity{// TODO: 24.03.2022
+public class Bear2 extends Entity{
     public Bear2(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
     {
         this.closeAttackPower = 1;
@@ -16,11 +16,11 @@ public class Bear2 extends Entity{// TODO: 24.03.2022
 
     @Override
     public void isHit() {
-
+        hitCounter++;
     }
 
     @Override
     public boolean alive() {
-        return false;
+        return alive;
     }
 }

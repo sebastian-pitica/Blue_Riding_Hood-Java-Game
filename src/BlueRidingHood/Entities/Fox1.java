@@ -1,6 +1,6 @@
 package BlueRidingHood.Entities;
 
-public class Fox1 extends Entity{// TODO: 24.03.2022
+public class Fox1 extends Entity{
     public Fox1(int entityXCoord, int entityYCoord, int entityMatrixX, int entityMatrixY, int speed, int stepSize)
     {
         this.closeAttackPower = 1;
@@ -11,16 +11,16 @@ public class Fox1 extends Entity{// TODO: 24.03.2022
         this.xCoord = entityXCoord;
         this.yCoord = entityYCoord;
         this.speed = speed;
-        this.stepSize =stepSize;
+        this.stepSize = stepSize;
     }
 
     @Override
     public void isHit() {
-
+        hitCounter++;
     }
 
     @Override
     public boolean alive() {
-        return false;
+        return alive;
     }
 }

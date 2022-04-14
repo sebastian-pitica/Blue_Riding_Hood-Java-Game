@@ -22,8 +22,11 @@ public class PlayerInputHandler {
     //functie care se ocupa cu prelucrarea inputului de la jucator
     {
         currentMap = Map.getCurrentMap();
+        //todo ice attack over sword attack
+        //todo ice attack sword attack hit function
+        //todo ice atack limit movement
 
-        if(!player.attackActive) {
+        if(!player.swordAttackActive) {
             //restrictionez miscarile si atacul simultan
             if (keyboardInputManager.left || keyboardInputManager.right)
             //restrictionez miscarile simultane pe cele doua axead
@@ -171,6 +174,7 @@ public class PlayerInputHandler {
     {
         System.out.println("Win!");
 
+        //todo map3
         if(currentMap.getMapNr()==1) {
             Map.setCurrentMap(2);
             currentMap = Map.getCurrentMap();

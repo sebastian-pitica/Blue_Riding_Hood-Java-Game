@@ -16,11 +16,11 @@ public class Fox2 extends Entity{// TODO: 24.03.2022
 
     @Override
     public void isHit() {
-
+        hitCounter++;
     }
 
     @Override
     public boolean alive() {
-        return false;
+        return alive;
     }
 }

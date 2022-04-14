@@ -13,6 +13,8 @@ public class Main {
     //todo check specificatori de acces
     //todo close cu tot cu fereastra
     //todo game stop fara imposibilitate de inchidere ferestra
+    //todo check player alive
+    //todo map3
     public static void main(String[] args) {
        // Map.map1.testMap();
         Game BlueRidingHood = Game.provideGame();

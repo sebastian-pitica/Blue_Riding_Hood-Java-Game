@@ -6,14 +6,18 @@ import BlueRidingHood.Graphics.Assets;
 public class Player extends RangeEntity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
     //todo counter monede, scor
     public int speed, stepSize; //viteza jucatorului, marimea unui pas
-    public boolean shieldActive, attackActive; //todo add other flags
+    public boolean shieldActive, swordAttackActive, iceAttackActive; //todo add other flags
 
     public Animation leftStand, rightStand, leftRun, rightRun;
     public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttackSword, rightAttackSword;
-    public Animation leftAttackIce, rightAttacIce;
+   //todo initialize atack ice
+    public Animation leftStartAttackIce,leftStopAttackIce, rightStartAttackIce, rightStopAttackIce,leftAttackIce,rightAttackIce;
+
     public Animation leftShieldStand, rightShieldStand, leftShieldRun, rightShieldRun;
     public Animation leftShieldDrawSword, rightShieldDrawSword,rightShieldRetractSword, leftShieldRetractSword, leftShieldAttackSword, rightShieldAttackSword;
-    public Animation leftShieldAttackIce, rightShieldAttacIce;
+    public Animation leftShieldStartAttackIce,leftShieldStopAttackIce, rightShieldStartAttackIce, rightShieldStopAttackIce,leftShieldAttackIce,rightShieldAttackIce;
+
+    public Animation iceAttackUp,iceAttackDown,iceAttackLeft,iceAttackRight;
 
     public Player(int playerXCoord,int playerYCoord,int playerMatrixX,int playerMatrixY, int speed, int stepSize)
     {
@@ -27,8 +31,8 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
         this.yCoord = playerYCoord;
         this.speed = speed;
         this.stepSize =stepSize;
-        shieldActive = attackActive = false;
-       animationInit();
+        shieldActive = swordAttackActive = iceAttackActive = false;
+        animationInit();
     }
 
     @Override
@@ -96,7 +100,7 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
         leftAttackSword = new Animation(speed, Assets.playerLeftAttackSword);
         rightAttackSword = new Animation(speed, Assets.playerRightAttackSword);
         leftAttackIce = new Animation(speed, Assets.playerLeftAttackIce);
-        rightAttacIce = new Animation(speed,Assets.playerRightAttackIce);
+        rightAttackIce = new Animation(speed,Assets.playerRightAttackIce);
 
         leftShieldStand = new Animation(speed, Assets.playerLeftShieldStand);
         rightShieldStand = new Animation(speed, Assets.playerRightShieldStand);
@@ -108,7 +112,23 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
         leftShieldRetractSword = new Animation(speed,Assets.playerLeftShieldRetractSword);
         leftShieldAttackSword = new Animation(speed, Assets.playerLeftShieldAttackSword);
         rightShieldAttackSword = new Animation(speed, Assets.playerRightShieldAttackSword);
+
+        leftStartAttackIce = new Animation(speed, Assets.playerLeftStartAttackIce);
+        rightStartAttackIce = new Animation(speed, Assets.playerRightStartAttackIce);
+        leftShieldStartAttackIce = new Animation(speed, Assets.playerLeftShieldStartAttackIce);
+        rightShieldStartAttackIce = new Animation(speed, Assets.playerRightShieldStartAttackIce);
+
+        leftStopAttackIce = new Animation(speed, Assets.playerLeftStopAttackIce);
+        rightStopAttackIce = new Animation(speed, Assets.playerRightStopAttackIce);
+        leftShieldStopAttackIce = new Animation(speed, Assets.playerLeftShieldStopAttackIce);
+        rightShieldStopAttackIce = new Animation(speed, Assets.playerRightShieldStopAttackIce);
+
         leftShieldAttackIce = new Animation(speed, Assets.playerLeftShieldAttackIce);
-        rightShieldAttacIce = new Animation(speed,Assets.playerRightShieldAttackIce);
+        rightShieldAttackIce = new Animation(speed,Assets.playerRightShieldAttackIce);
+
+        iceAttackUp = new Animation(speed,Assets.iceAttackUp);
+        iceAttackDown = new Animation(speed,Assets.iceAttackDown);
+        iceAttackLeft = new Animation(speed,Assets.iceAttackLeft);
+        iceAttackRight = new Animation(speed,Assets.iceAttackRight);
     }
 }

@@ -90,7 +90,7 @@ public class KeyboardInputManager implements KeyListener {
         {
             swordAttack=true;
         }
-        if(keyPressedCode == KeyEvent.VK_E)
+        if(keyPressedCode == KeyEvent.VK_F)
         {
             iceAttack=true;
         }
@@ -172,7 +172,7 @@ public class KeyboardInputManager implements KeyListener {
         {
             swordAttack=false;
         }
-        if(keyReleasedCode == KeyEvent.VK_E)
+        if(keyReleasedCode == KeyEvent.VK_F)
         {
             iceAttack=false;
         }

@@ -18,28 +18,36 @@ public class Assets {
     public static BufferedImage[] playerRightRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerRightDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerRightAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerRightAttackIce = new BufferedImage[9];
+    public static BufferedImage[] playerRightAttackIce = new BufferedImage[5];
+    public static BufferedImage[] playerRightStartAttackIce = new BufferedImage[3];
+    public static BufferedImage[] playerRightStopAttackIce = new BufferedImage[1];
 
     public static BufferedImage[] playerRightShieldStand = new BufferedImage[4];
     public static BufferedImage[] playerRightShieldRun = new BufferedImage[6];
     public static BufferedImage[] playerRightShieldRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerRightShieldDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerRightShieldAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerRightShieldAttackIce = new BufferedImage[9];
+    public static BufferedImage[] playerRightShieldAttackIce = new BufferedImage[5];
+    public static BufferedImage[] playerRightShieldStartAttackIce = new BufferedImage[3];
+    public static BufferedImage[] playerRightShieldStopAttackIce = new BufferedImage[1];
 
     public static BufferedImage[] playerLeftStand = new BufferedImage[4];
     public static BufferedImage[] playerLeftRun = new BufferedImage[6];
     public static BufferedImage[] playerLeftRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[9];
+    public static BufferedImage[] playerLeftAttackIce = new BufferedImage[5];
+    public static BufferedImage[] playerLeftStartAttackIce = new BufferedImage[3];
+    public static BufferedImage[] playerLeftStopAttackIce = new BufferedImage[1];
 
     public static BufferedImage[] playerLeftShieldStand = new BufferedImage[4];
     public static BufferedImage[] playerLeftShieldRun = new BufferedImage[6];
     public static BufferedImage[] playerLeftShieldRetractSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftShieldDrawSword = new BufferedImage[9];
     public static BufferedImage[] playerLeftShieldAttackSword = new BufferedImage[17];
-    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[9];
+    public static BufferedImage[] playerLeftShieldAttackIce = new BufferedImage[5];
+    public static BufferedImage[] playerLeftShieldStartAttackIce = new BufferedImage[3];
+    public static BufferedImage[] playerLeftShieldStopAttackIce = new BufferedImage[1];
 
     public static BufferedImage[] bear1Left = new BufferedImage[3];
     public static BufferedImage[] bear1Right = new BufferedImage[3];
@@ -71,12 +79,20 @@ public class Assets {
     public static BufferedImage[] wolfUp = new BufferedImage[4];
     public static BufferedImage[] wolfDown = new BufferedImage[4];
 
+    public static BufferedImage[] fireAttackUp = new BufferedImage[5];
+    public static BufferedImage[] fireAttackDown = new BufferedImage[5];
+    public static BufferedImage[] fireAttackLeft = new BufferedImage[5];
+    public static BufferedImage[] fireAttackRight = new BufferedImage[5];
+
+    public static BufferedImage[] iceAttackUp = new BufferedImage[5];
+    public static BufferedImage[] iceAttackDown = new BufferedImage[5];
+    public static BufferedImage[] iceAttackLeft = new BufferedImage[5];
+    public static BufferedImage[] iceAttackRight = new BufferedImage[5];
+
     public static BufferedImage[] coin = new BufferedImage[8];
-    public static BufferedImage[] fireAttack = new BufferedImage[20];
-    public static BufferedImage[] iceAttack = new BufferedImage[20];
+
 
     // TODO: butoane gui
-    // TODO: sprite atacuri
     //todo sprite monede
 
     /*! \fn public static void Init()
@@ -111,7 +127,7 @@ public class Assets {
             for (int j = 0; j < 4; ++j, ++i) {
                 playerRightStand[j] = player.crop(i, 0, 48, 48);
                 playerRightShieldStand[j] = playerShield.crop(i, 0, 48, 48);
-                playerLeftStand[j] = getRotatedClockwiseImage(playerRightStand[j],"");
+                playerLeftStand[j] = getFlippedImage(playerRightStand[j]);
                 playerLeftShieldStand[j] = getFlippedImage(playerRightShieldStand[j]);
             }
 
@@ -149,11 +165,30 @@ public class Assets {
             }
 
             for (int j = 0; j < 9; ++j, ++i) {
-                playerRightAttackIce[j] = player.crop(i, 0, 48, 48);
-                playerRightShieldAttackIce[j] = playerShield.crop(i, 0, 48, 48);
+                if(j<3) {
+                    playerRightStartAttackIce[j] = player.crop(i, 0, 48, 48);
+                    playerRightShieldStartAttackIce[j] = playerShield.crop(i, 0, 48, 48);
 
-                playerLeftAttackIce[j] = getFlippedImage(playerRightAttackIce[j]);
-                playerLeftShieldAttackIce[j] = getFlippedImage(playerRightShieldAttackIce[j]);
+                    playerLeftStartAttackIce[j] = getFlippedImage(playerRightStartAttackIce[j]);
+                    playerLeftShieldStartAttackIce[j] = getFlippedImage(playerRightShieldStartAttackIce[j]);
+                }
+                else {
+                    if (j < 8) {
+                        playerRightAttackIce[j-3] = player.crop(i, 0, 48, 48);
+                        playerRightShieldAttackIce[j-3] = playerShield.crop(i, 0, 48, 48);
+
+                        playerLeftAttackIce[j-3] = getFlippedImage(playerRightAttackIce[j-3]);
+                        playerLeftShieldAttackIce[j-3] = getFlippedImage(playerRightShieldAttackIce[j-3]);
+                    }
+                    else
+                    {
+                        playerRightStopAttackIce[j-8] = player.crop(i, 0, 48, 48);
+                        playerRightShieldStopAttackIce[j-8] = playerShield.crop(i, 0, 48, 48);
+
+                        playerLeftStopAttackIce[j-8] = getFlippedImage(playerRightStopAttackIce[j-8]);
+                        playerLeftShieldStopAttackIce[j-8] = getFlippedImage(playerRightShieldStopAttackIce[j-8]);
+                    }
+                }
             }
         }
 
@@ -265,15 +300,22 @@ public class Assets {
         //fire/ice attack sprites load
         {
             i=0;
-           // for()
+            for(int j=0;j<5;++j)
             {
+                fireAttackRight[j]=fireAttack.crop(j,i,32,32);
+                fireAttackUp[j]=getRotatedImage(fireAttackRight[j],1);
+                fireAttackDown[j]=getRotatedImage(fireAttackRight[j],1);
+                fireAttackLeft[j]=getFlippedImage(fireAttackRight[j]);
 
+                iceAttackRight[j]=iceAttack.crop(j,i,32,32);
+                iceAttackUp[j]=getRotatedImage(fireAttackRight[j],1);
+                iceAttackDown[j]=getRotatedImage(fireAttackRight[j],1);
+                iceAttackLeft[j]=getFlippedImage(fireAttackRight[j]);
             }
         }
 
     }
 
-    @Deprecated
     public static BufferedImage getFlippedImage(BufferedImage image) {
         //functie ce face flip vertical al unei imagini
         //sursa: https://tousu.in/qa/?qa=1154932/
@@ -289,23 +331,15 @@ public class Assets {
 
     }
 
-    public static BufferedImage getRotatedClockwiseImage(BufferedImage src, String Direction) {
-        //functie de rotatie preluata si adapta pentru rotatia dupa cadranul trigonometric
+    public static BufferedImage getRotatedImage(BufferedImage src, int directionNr) {
+        //todo posibil schimbat
+        //functie de rotatie preluata si adapta pentru rotatia dupa nr directie
         //sursa: https://stackoverflow.com/questions/20959796/rotate-90-degree-to-right-image-in-java
 
         int width = src.getWidth();
         int height = src.getHeight();
-        int directionNr = 0;
-        BufferedImage dest = new BufferedImage(height, width, src.getType());
 
-        switch (Direction)
-        {
-            case "down": directionNr = 1; break;
-            case "left": directionNr = 2; break;
-            case "up": directionNr = 3; break;
-            case "right": directionNr = 4; break;
-            default: directionNr = 4; break;
-        }
+        BufferedImage dest = new BufferedImage(height, width, src.getType());
 
         Graphics2D graphics2D = dest.createGraphics();
         graphics2D.translate((height - width) / 2, (height - width) / 2);
