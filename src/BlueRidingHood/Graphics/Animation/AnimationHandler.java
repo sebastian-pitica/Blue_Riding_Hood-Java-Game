@@ -1,9 +1,7 @@
 package BlueRidingHood.Graphics.Animation;
-
-import BlueRidingHood.Entities.Attack.FireAttack;
-import BlueRidingHood.Entities.Attack.IceAttack;
 import BlueRidingHood.Entities.Coin.Coin;
 import BlueRidingHood.Entities.Coin.CoinFactory;
+import BlueRidingHood.Entities.Entity;
 import BlueRidingHood.Entities.Player;
 import BlueRidingHood.InputManager.KeyboardInputManager;
 import BlueRidingHood.InputManager.MouseInputManager;
@@ -12,6 +10,8 @@ import BlueRidingHood.Map.Map;
 import java.awt.*;
 import java.util.Objects;
 import java.util.Vector;
+
+import static BlueRidingHood.Entities.Entity.actualEntities;
 
 public class AnimationHandler {
 
@@ -22,24 +22,19 @@ public class AnimationHandler {
     private Vector<Coin> coins;
     private long shieldStartTime;
     private long shieldStopTime;
+
     //todo other entities animations: monede, inamici, atacuri
     //todo other entities
     //todo possible other time animations: atacuri, etc
     //todo init pentru alte entitati
 
-    public AnimationHandler(Player player)
+    public AnimationHandler()
     {
         keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
         mouseInputManager = MouseInputManager.provideMouseInputManager();
-        this.player = player;
+        this.player = Player.getPlayer();
         coinInit();
-        attackInit();
-    }
 
-    private void attackInit()
-    {
-        FireAttack.initAnimation();
-        IceAttack.initAnimation();
     }
 
     private void coinInit()
@@ -58,7 +53,7 @@ public class AnimationHandler {
 
         if (keyboardInputManager.up || keyboardInputManager.down) {
 
-            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "left"))
+            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.left))
             {
                 if(!player.shieldActive) {
                     result = player.leftRun;
@@ -70,7 +65,7 @@ public class AnimationHandler {
             }
             else
             {
-                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "right"))
+                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.right))
                 {
                     if(!player.shieldActive) {
                         result = player.rightRun;
@@ -106,7 +101,7 @@ public class AnimationHandler {
         //daca s-a facut reset sau nu s-a apasat nici o tasta de miscare
         //todo add to documentatie explicatii
         {
-            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "left"))
+            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.left))
             {
                 if(!player.shieldActive) {
                     result = player.leftStand;
@@ -118,7 +113,7 @@ public class AnimationHandler {
             }
             else
             {
-                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "right"))
+                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.right))
                 {
                     if(!player.shieldActive) {
                         result = player.rightStand;
@@ -131,106 +126,41 @@ public class AnimationHandler {
             }
         }
 
-        //todo ice attack sprite
-        //todo check player alive
-        if(keyboardInputManager.iceAttack)
-        {
-            //todo add explicatii documentatie
-            //daca este apasata tasta de atac
-            if (player.iceAttackActive) {
-                //daca atacul este in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftAttackIce;
-                    } else {
-                        result = player.leftShieldAttackIce;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightAttackIce;
-                        } else {
-                            result = player.rightShieldAttackIce;
-                        }
-                    }
-                }
-            } else {
-                //daca atacul nu este in desfasurare
-                player.iceAttackActive = true;
-                //atacul este acum in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftStartAttackIce;
-                    } else {
-                        result = player.leftShieldStartAttackIce;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightStartAttackIce;
-                        } else {
-                            result = player.rightShieldStartAttackIce;
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            //daca nu a fost apasata tasta de atac, dar atacul este in desfasurare
-            if(player.iceAttackActive) {
-                player.iceAttackActive = false;
-                //atacul este incheiat
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftStopAttackIce;
-                    } else {
-                        result = player.leftShieldStopAttackIce;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightStopAttackIce;
-                        } else {
-                            result = player.rightShieldStopAttackIce;
-                        }
-                    }
-                }
-            }
-        }
 
-        if(keyboardInputManager.swordAttack) {
+        //todo check player alive
+
+        if(keyboardInputManager.attack) {
             //todo add explicatii documentatie
             //daca este apasata tasta de atac
-            if (player.swordAttackActive) {
+            if (player.attackActive) {
                 //daca atacul este in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.left)) {
                     if (!player.shieldActive) {
-                        result = player.leftAttackSword;
+                        result = player.leftAttack;
                     } else {
-                        result = player.leftShieldAttackSword;
+                        result = player.leftShieldAttack;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.right)) {
                         if (!player.shieldActive) {
-                            result = player.rightAttackSword;
+                            result = player.rightAttack;
                         } else {
-                            result = player.rightShieldAttackSword;
+                            result = player.rightShieldAttack;
                         }
                     }
                 }
             } else {
                 //daca atacul nu este in desfasurare
-                player.swordAttackActive = true;
+                player.attackActive = true;
                 //atacul este acum in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.left)) {
                     if (!player.shieldActive) {
                         result = player.leftDrawSword;
                     } else {
                         result = player.leftShieldDrawSword;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.right)) {
                         if (!player.shieldActive) {
                             result = player.rightDrawSword;
                         } else {
@@ -243,17 +173,17 @@ public class AnimationHandler {
         else
         {
             //daca nu a fost apasata tasta de atac, dar atacul este in desfasurare
-            if(player.swordAttackActive) {
-                player.swordAttackActive = false;
+            if(player.attackActive) {
+                player.attackActive = false;
                 //atacul este incheiat
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.left)) {
                     if (!player.shieldActive) {
                         result = player.leftRetractSword;
                     } else {
                         result = player.leftShieldRetractSword;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, KeyboardInputManager.Direction.right)) {
                         if (!player.shieldActive) {
                             result = player.rightRetractSword;
                         } else {
@@ -268,6 +198,7 @@ public class AnimationHandler {
     }
 
     public void animationStartTimeHandler() //todo for all animations
+            //momentan doar shield
     {
         if(keyboardInputManager.shieldActivated &&
                 timeToStartAnimation(shieldStopTime,"shield")) //daca scutul a fost activat
@@ -275,6 +206,7 @@ public class AnimationHandler {
           player.shieldActive = true;
           shieldStartTime = System.nanoTime();
         }
+
     }
 
     public void aniomationStopTimeHandler() //todo for all animations
@@ -285,19 +217,18 @@ public class AnimationHandler {
             player.shieldActive = false;
             shieldStopTime = System.nanoTime();
         }
+
     }
 
     private boolean timeToStartAnimation(long stopTime, String animation)
     {
         //todo for all timed animation
         long nowTime = System.nanoTime(); //masor timpul actual
-        int secondsLimit=0;
-        switch (animation) {
+        int secondsLimit = switch (animation) {
             //todo verific daca e mai mare ca 15 secunde
-            case "shield": secondsLimit = 5; break;
-            case "iceattack": secondsLimit = 1;break;
-            case "fireattack": secondsLimit = 3; break;
-        }
+            case "shield" -> 5;
+            default -> 0;
+        };
 
         if ((nowTime - stopTime) / secondsLimit >= 1000000000) //for shield animation switch case
         //todo variabila cu limita de secunde
@@ -328,6 +259,23 @@ public class AnimationHandler {
 
     }
 
+
+    public void runEntitiesAnimation()
+    {
+        for(Entity element: actualEntities)
+        {
+            element.runAnimation();
+        }
+    }
+
+    public void drawEntitiesAnimation(Graphics g)
+    {
+        for(Entity element: actualEntities)
+        {
+            element.draw(g);
+        }
+    }
+
     public void runCoinAnimations() {
 
         checkCoinVector();
@@ -346,6 +294,7 @@ public class AnimationHandler {
 
         if(currentMap != Map.getCurrentMap() || coins.size() == 0)
         {
+            currentMap = Map.getCurrentMap();
             coinInit();
         }
     }

@@ -8,9 +8,10 @@ public class KeyboardInputManager implements KeyListener {
     //todo add celelate comenzi
 
     public Boolean up, down, left, right;
-    public Boolean swordAttack, iceAttack, shieldActivated;
+    public Boolean attack, shieldActivated;
     public Boolean escape, GODModeOn, resetHitCounter,killAllEnemies, reset, rectangular, grid, quit, faster;
-    public String lastHorizontalDirection ="right", lastMovementKeYPressed="right";
+    public enum Direction {up, down, left, right}
+    public Direction lastHorizontalDirection = Direction.right, lastMovementDirection =Direction.right;
 
     protected static KeyboardInputManager keyboardInputManager=null;
 
@@ -25,7 +26,7 @@ public class KeyboardInputManager implements KeyListener {
 
     protected KeyboardInputManager()
     {
-        up = down = left = right = swordAttack = iceAttack =
+        up = down = left = right = attack =
                   shieldActivated = escape = GODModeOn = resetHitCounter =
                         killAllEnemies = faster = reset = rectangular = quit = grid = false;
     }
@@ -37,24 +38,24 @@ public class KeyboardInputManager implements KeyListener {
         if(keyPressedCode == KeyEvent.VK_W)
         {
             up=true;
-            lastMovementKeYPressed="up";
+            lastMovementDirection =Direction.up;
         }
         if(keyPressedCode == KeyEvent.VK_S)
         {
             down = true;
-            lastMovementKeYPressed="down";
+            lastMovementDirection =Direction.down;
         }
         if(keyPressedCode == KeyEvent.VK_A)
         {
             left = true;
-            lastHorizontalDirection ="left";
-            lastMovementKeYPressed="left";
+            lastHorizontalDirection =Direction.left;
+            lastMovementDirection = Direction.left;
         }
         if(keyPressedCode == KeyEvent.VK_D)
         {
             right = true;
-            lastHorizontalDirection ="right";
-            lastMovementKeYPressed="right";
+            lastHorizontalDirection =Direction.right;
+            lastMovementDirection =Direction.right;
         }
         if(keyPressedCode == KeyEvent.VK_R)
         {
@@ -62,25 +63,11 @@ public class KeyboardInputManager implements KeyListener {
         }
         if(keyPressedCode == KeyEvent.VK_T)
         {
-            if(rectangular)
-            {
-                rectangular = false;
-            }
-            else
-            {
-                rectangular = true;
-            }
+            rectangular = !rectangular;
         }
         if(keyPressedCode == KeyEvent.VK_G)
         {
-            if(grid)
-            {
-                grid = false;
-            }
-            else
-            {
-                grid = true;
-            }
+            grid = !grid;
         }
 
 
@@ -88,11 +75,7 @@ public class KeyboardInputManager implements KeyListener {
 
         if(keyPressedCode == KeyEvent.VK_SPACE)
         {
-            swordAttack=true;
-        }
-        if(keyPressedCode == KeyEvent.VK_F)
-        {
-            iceAttack=true;
+            attack =true;
         }
         if(keyPressedCode == KeyEvent.VK_Q)
         {
@@ -105,25 +88,11 @@ public class KeyboardInputManager implements KeyListener {
 
         if(keyPressedCode == KeyEvent.VK_F10)
         {
-            if(GODModeOn)
-            {
-                GODModeOn = false;
-            }
-            else
-            {
-                GODModeOn = true;
-            }
+            GODModeOn = !GODModeOn;
         }
         if(keyPressedCode == KeyEvent.VK_F9)
         {
-            if(faster)
-            {
-                faster = false;
-            }
-            else
-            {
-                faster = true;
-            }
+            faster = !faster;
         }
         if(keyPressedCode == KeyEvent.VK_F11)
         {
@@ -168,13 +137,10 @@ public class KeyboardInputManager implements KeyListener {
         }
 
 
+
         if(keyReleasedCode == KeyEvent.VK_SPACE)
         {
-            swordAttack=false;
-        }
-        if(keyReleasedCode == KeyEvent.VK_F)
-        {
-            iceAttack=false;
+            attack =false;
         }
         if(keyReleasedCode == KeyEvent.VK_Q)
         {
@@ -201,7 +167,5 @@ public class KeyboardInputManager implements KeyListener {
     {
         return up || down || left || right;     }
 
-    @Override public void keyTyped(KeyEvent e) {
-
-    }
+    @Override public void keyTyped(KeyEvent e) {}
 }

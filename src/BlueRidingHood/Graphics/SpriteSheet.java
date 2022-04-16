@@ -9,8 +9,6 @@ import java.awt.image.BufferedImage;
     de la adresa (x * latimeDala, y * inaltimeDala)
  */
 public class SpriteSheet {
-    private static final int tileWidth = 64;   /*!< Latimea unei dale din sprite sheet.*/
-    private static final int tileHeight = 64;   /*!< Inaltime unei dale din sprite sheet.*/
     private final BufferedImage spriteSheet;              /*!< Referinta catre obiectul BufferedImage ce contine sprite sheet-ul.*/
 
     /*! \fn public SpriteSheet(BufferedImage sheet)
@@ -31,14 +29,6 @@ public class SpriteSheet {
         \param x numarul dalei din sprite sheet pe axa x.
         \param y numarul dalei din sprite sheet pe axa y.
      */
-    public BufferedImage crop(int x, int y) {
-        /// Subimaginea (dala) este regasita in sprite sheet specificad coltul stanga sus
-        /// al imaginii si apoi latimea si inaltimea (totul in pixeli). Coltul din stanga sus al imaginii
-        /// se obtine inmultind numarul de ordine al dalei cu dimensiunea in pixeli a unei dale.
-        return spriteSheet.getSubimage(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
-    }
-
-    //supraincarcat
     public BufferedImage crop(int x, int y, int tileWidth,int tileHeight ) {
         /// Subimaginea (dala) este regasita in sprite sheet specificad coltul stanga sus
         /// al imaginii si apoi latimea si inaltimea (totul in pixeli). Coltul din stanga sus al imaginii

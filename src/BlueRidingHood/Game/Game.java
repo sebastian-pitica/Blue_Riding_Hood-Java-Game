@@ -1,5 +1,7 @@
 package BlueRidingHood.Game;
 
+import BlueRidingHood.Entities.BasicEntity.Fox1;
+import BlueRidingHood.Entities.EntitiesFactory;
 import BlueRidingHood.Entities.Player;
 import BlueRidingHood.GameWindow.GameWindow;
 import BlueRidingHood.Graphics.Animation.Animation;
@@ -15,6 +17,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+
+import static BlueRidingHood.Entities.Entity.actualEntities;
 
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
@@ -62,7 +66,8 @@ public class Game implements Runnable {
     private Map currentMap;
     private Image currentMapImage;
     private Animation currentPlayerAnimation;
-
+    private EntitiesFactory entitiesFactory;
+    private Fox1 fox1;
     private boolean displayRect = false;
     //flag pentru check afisare rect informativ
     private boolean grid = false;
@@ -119,12 +124,15 @@ public class Game implements Runnable {
 
         Assets.Init();
 
+        entitiesFactory = EntitiesFactory.getEntitiesFactory();
         currentMap = Map.getCurrentMap();
-        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,2);
+        player = Player.getPlayer();
         currentPlayerAnimation = player.rightStand; //animatia default
-        animationHandler = new AnimationHandler(player);
-        inputHandler = new PlayerInputHandler(player);
-        //todo add gui & others for start
+        animationHandler = new AnimationHandler();
+        inputHandler = new PlayerInputHandler();
+        actualEntities = entitiesFactory.produceMapEntities(1);
+        fox1 = new Fox1(29,14,6);
+
 
     }
 
@@ -219,7 +227,7 @@ public class Game implements Runnable {
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
     private void Update() {
-        if(gameWindow !=null && player.alive())
+        if(gameWindow !=null)
         //daca exista referinta la fereastra
         {
             //todo vezi daca poti scapa
@@ -231,9 +239,13 @@ public class Game implements Runnable {
             currentMap = Map.getCurrentMap();
             currentMapImage = Assets.maps[currentMap.getMapNr()-1];
 
-            currentPlayerAnimation = animationHandler.currentPlayerAnimation(); //preiau animatia curenta
+            currentPlayerAnimation = animationHandler.currentPlayerAnimation(); //preiau animaddtia curenta
             currentPlayerAnimation.runAnimation(); //pornesc animatia
             animationHandler.runCoinAnimations();
+            animationHandler.runEntitiesAnimation();
+            fox1.runAnimation();
+
+
             //todo other animations
         }
     }
@@ -260,6 +272,7 @@ public class Game implements Runnable {
             }
         }
         /// Se obtine contextul grafic curent in care se poate desena.
+        assert bufferStrategy != null;
         Graphics graphics = bufferStrategy.getDrawGraphics();
         /// Se sterge ce era
         graphics.clearRect(0, 0, gameWindow.GetWndWidth(), gameWindow.GetWndHeight());
@@ -269,8 +282,10 @@ public class Game implements Runnable {
         graphics.drawImage(currentMapImage, 0, 0,gameWindow.GetWndWidth(), gameWindow.GetWndHeight(), null);
         currentPlayerAnimation.drawAnimation(graphics,player.xCoord,player.yCoord-corectiePlayerCoord,Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
         animationHandler.drawCoinAnimations(graphics);
+       // animationHandler.drawEntitiesAnimation(graphics);
         animationHandler.animationStartTimeHandler(); //verific daca trebuie pornita vreo animatie
-
+        fox1.followPlayer();
+        fox1.draw(graphics);
 
         if(grid) {//grid on //todo vezi daca poti scapa de ele de aici
             for (int x = 0; x < gameWindow.GetWndWidth(); x += Tile.TILE_HEIGHT)
@@ -291,47 +306,6 @@ public class Game implements Runnable {
         /// Elibereaza resursele de memorie aferente contextului grafic curent (zonele de memorie ocupate de
         /// elementele grafice ce au fost desenate pe canvas).
         graphics.dispose();
-    }
-
-    @Deprecated
-    private boolean canAdvance(int x, int y, int corner)
-    //idee de functie pentru alte verificari corectii
-    {
-        int realX1, realY1, realX2, realY2;
-        realY1=realY2=realX2=realX1=0;
-        switch (corner){
-            case 1:
-            {
-                realX1 = x; realY1=y;
-                realX2 = x+Tile.TILE_HEIGHT; realY2=y;
-            }
-                //up case
-            case 2:
-            {
-                realX1 = x+Tile.TILE_HEIGHT; realY1=y;
-                realX2 = realX1; realY2=y+Tile.TILE_HEIGHT;
-            }
-                //right case
-            case 3:
-            {
-                realX1 = x+Tile.TILE_HEIGHT; realY1=y+Tile.TILE_HEIGHT;
-                realX2 = x; realY2=realY1;
-            }
-                //down case
-            case 4:
-            {
-                realX1 = x; realY1=y+Tile.TILE_HEIGHT;
-                realX2 = x; realY2=y;
-            }
-                //left case
-            default:
-        }
-
-        System.out.println("x1: "+realX1+", y1: "+realY1+"\nx2: "+realX2+", y2: "+realY2);
-        System.out.println("mx1: "+realX1/Tile.TILE_HEIGHT+", my1: "+realY1/Tile.TILE_HEIGHT+"\nmx2: "+realX2/Tile.TILE_HEIGHT+", my2: "+realY2/Tile.TILE_HEIGHT);
-
-        return false;
-
     }
 
 

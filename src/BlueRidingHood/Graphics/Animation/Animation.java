@@ -6,12 +6,12 @@ import java.awt.image.BufferedImage;
 public class Animation {
     //clasa preluata din proiectul SunnyLand, relizat de Paval Mihaela Irina (2019-2020), cu acord de utilizare
 
-    private int speed;
-    private int frames;
+    private final int speed;
+    private final int frames;
     private int index= 0;
     private int count= 0;
 
-    private BufferedImage[] images;
+    private final BufferedImage[] images;
     private BufferedImage currentImg;
 
     public Animation(int speed, BufferedImage[] arg){
@@ -19,10 +19,7 @@ public class Animation {
 
         images=new BufferedImage[arg.length];
 
-        for(int i=0;i<arg.length;++i)
-        {
-            images[i]=arg[i];
-        }
+        System.arraycopy(arg, 0, images, 0, arg.length);
         frames=arg.length;
     }
 

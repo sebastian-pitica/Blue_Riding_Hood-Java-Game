@@ -1,5 +1,6 @@
 package BlueRidingHood;
 
+import BlueRidingHood.DataBaseHandler.DataBaseHandler;
 import BlueRidingHood.Game.Game;
 
 public class Main {
@@ -14,10 +15,15 @@ public class Main {
     //todo close cu tot cu fereastra
     //todo game stop fara imposibilitate de inchidere ferestra
     //todo check player alive
-    //todo map3
+    //todo map3?
+    //todo plus minus outside class
+    //todo return player ref
+    //todo vezi animatii proaste
+    //todo player inside set current animation
+    //todo entities set curent animations
     public static void main(String[] args) {
-       // Map.map1.testMap();
         Game BlueRidingHood = Game.provideGame();
+        new DataBaseHandler();
         BlueRidingHood.StartGame();
     }
 
