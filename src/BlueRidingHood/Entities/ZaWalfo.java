@@ -1,9 +1,8 @@
 package BlueRidingHood.Entities;
 
-public class ZaWalfo extends RangeEntity{
+public class ZaWalfo extends Entity{
 
     static private ZaWalfo zaWalfo = null;
-
     static public ZaWalfo getZaWalfo()
     {
         if(zaWalfo==null)
@@ -20,11 +19,12 @@ public class ZaWalfo extends RangeEntity{
         return hitCounter;
     }
 
-    protected ZaWalfo() {} //todo
+    protected ZaWalfo() {
+    } //todo
 
     @Override
     public void isHit() {
-        hitCounter++;
+        ++hitCounter;
     }
 
     @Override

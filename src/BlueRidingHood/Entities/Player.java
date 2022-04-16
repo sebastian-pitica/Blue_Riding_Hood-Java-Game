@@ -1,45 +1,72 @@
 package BlueRidingHood.Entities;
 
+import BlueRidingHood.Game.Sign;
 import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Assets;
+import BlueRidingHood.Graphics.Tile;
+import BlueRidingHood.Map.Map;
 
-public class Player extends RangeEntity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
+import static BlueRidingHood.Map.Map.getCurrentMap;
+
+public class Player extends Entity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
     //todo counter monede, scor
     //todo check singleton
     //todo score rulles
-    public int speed, stepSize,score = 0; //viteza jucatorului, marimea unui pas
-    public boolean shieldActive, swordAttackActive, iceAttackActive; //todo add other flags
+
+    private static Player player = null;
+    private static boolean positionChanged;
+    private final int speed = 6;
+    public int stepSize = 2;
+    public int score = 0; //viteza jucatorului, marimea unui pas
+    public boolean shieldActive, attackActive; //todo add other flags
 
     public Animation leftStand, rightStand, leftRun, rightRun;
-    public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttackSword, rightAttackSword;
-   //todo initialize atack ice
-    public Animation leftStartAttackIce,leftStopAttackIce, rightStartAttackIce, rightStopAttackIce,leftAttackIce,rightAttackIce;
+    public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttack, rightAttack;
 
     public Animation leftShieldStand, rightShieldStand, leftShieldRun, rightShieldRun;
-    public Animation leftShieldDrawSword, rightShieldDrawSword,rightShieldRetractSword, leftShieldRetractSword, leftShieldAttackSword, rightShieldAttackSword;
-    public Animation leftShieldStartAttackIce,leftShieldStopAttackIce, rightShieldStartAttackIce, rightShieldStopAttackIce,leftShieldAttackIce,rightShieldAttackIce;
-
-    public Animation iceAttackUp,iceAttackDown,iceAttackLeft,iceAttackRight;
+    public Animation leftShieldDrawSword, rightShieldDrawSword,rightShieldRetractSword, leftShieldRetractSword, leftShieldAttack, rightShieldAttack;
 
     public void addPointsToScore(int amount)
     {
         score+=amount;
     }
 
-    public Player(int playerXCoord,int playerYCoord,int playerMatrixX,int playerMatrixY, int speed, int stepSize)
+    protected Player()
     {
-        this.closeAttackPower = 1;
-        this.rangeAttackPower = 2;
+        this.attackPower = 1;
         this.alive = true;
         this.attackResistence = 15;
-        this.matrixX = playerMatrixX;
-        this.matrixY = playerMatrixY;
-        this.xCoord = playerXCoord;
-        this.yCoord = playerYCoord;
-        this.speed = speed;
-        this.stepSize =stepSize;
-        shieldActive = swordAttackActive = iceAttackActive = false;
+        this.matrixX = 0;
+        this.matrixY = Map.getCurrentMap().startY();
+        this.xCoord = 0;
+        this.yCoord = Map.getCurrentMap().startY()* Tile.TILE_HEIGHT;
+        shieldActive = attackActive =  false;
+        player = this;
         animationInit();
+    }
+
+    public static Player getPlayer()
+    {
+        if(player == null)
+        {
+            player = new Player();
+        }
+
+        return player;
+    }
+
+    public static boolean isPositionChanged()
+    {
+        return positionChanged;
+    }
+
+    public static void setPositionChanged() {
+        positionChanged = true;
+    }
+
+    public static void unsetPositionChanged()
+    {
+        positionChanged = false;
     }
 
     @Override
@@ -47,14 +74,25 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
     {
         if(++hitCounter > attackResistence)
         {
-            alive = false;
+            isKilled();
         }
     }
 
     @Override
-    public boolean alive()
-    {
+    public boolean alive() {
         return alive;
+    }
+
+    public void isKilled()
+    {
+        alive = false;
+    }
+
+    public void restarted()
+    {
+        alive = true;
+        score = 0;
+        shieldActive = attackActive =  false;
     }
 
     public void resetHitCounter()
@@ -65,15 +103,13 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
     public void GODmodeON()
     {
         attackResistence=9999999;
-        rangeAttackPower=9999999;
-        closeAttackPower=9999999;
+        attackPower =9999999;
     }
 
     public void GODmodeOFF()
     {
         attackResistence = 15;
-        rangeAttackPower = 2;
-        closeAttackPower = 1;
+        attackPower = 1;
     }
 
     public void fasterON()
@@ -89,10 +125,10 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
     public void displayPlayerDetails()
     //afiseaza pozitia jcuatorului in coordonate x, y si in coordonate matriceale
     {
-        System.out.print("\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
+       System.out.print("\n\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
         System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
-                "CloseAttackPower: "+closeAttackPower+", RangeAttackPower: "+rangeAttackPower+"\n"
-        +"Score: "+score+"\n");
+                "CloseAttackPower: "+ attackPower +", Speed: "+stepSize+"\n"
+            +"Score: "+score+"\n");
     }
 
     private void animationInit()
@@ -105,10 +141,8 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
         rightDrawSword = new Animation(speed,Assets.playerRightDrawSword);
         rightRetractSword = new Animation(speed, Assets.playerRightRetractSword);
         leftRetractSword = new Animation(speed,Assets.playerLeftRetractSword);
-        leftAttackSword = new Animation(speed, Assets.playerLeftAttackSword);
-        rightAttackSword = new Animation(speed, Assets.playerRightAttackSword);
-        leftAttackIce = new Animation(speed, Assets.playerLeftAttackIce);
-        rightAttackIce = new Animation(speed,Assets.playerRightAttackIce);
+        leftAttack = new Animation(speed, Assets.playerLeftAttack);
+        rightAttack = new Animation(speed, Assets.playerRightAttack);
 
         leftShieldStand = new Animation(speed, Assets.playerLeftShieldStand);
         rightShieldStand = new Animation(speed, Assets.playerRightShieldStand);
@@ -118,25 +152,112 @@ public class Player extends RangeEntity{ //todo add other atributes, methods ex:
         rightShieldDrawSword = new Animation(speed,Assets.playerRightShieldDrawSword);
         rightShieldRetractSword = new Animation(speed, Assets.playerRightShieldRetractSword);
         leftShieldRetractSword = new Animation(speed,Assets.playerLeftShieldRetractSword);
-        leftShieldAttackSword = new Animation(speed, Assets.playerLeftShieldAttackSword);
-        rightShieldAttackSword = new Animation(speed, Assets.playerRightShieldAttackSword);
+        leftShieldAttack = new Animation(speed, Assets.playerLeftShieldAttack);
+        rightShieldAttack = new Animation(speed, Assets.playerRightShieldAttack);
 
-        leftStartAttackIce = new Animation(speed, Assets.playerLeftStartAttackIce);
-        rightStartAttackIce = new Animation(speed, Assets.playerRightStartAttackIce);
-        leftShieldStartAttackIce = new Animation(speed, Assets.playerLeftShieldStartAttackIce);
-        rightShieldStartAttackIce = new Animation(speed, Assets.playerRightShieldStartAttackIce);
-
-        leftStopAttackIce = new Animation(speed, Assets.playerLeftStopAttackIce);
-        rightStopAttackIce = new Animation(speed, Assets.playerRightStopAttackIce);
-        leftShieldStopAttackIce = new Animation(speed, Assets.playerLeftShieldStopAttackIce);
-        rightShieldStopAttackIce = new Animation(speed, Assets.playerRightShieldStopAttackIce);
-
-        leftShieldAttackIce = new Animation(speed, Assets.playerLeftShieldAttackIce);
-        rightShieldAttackIce = new Animation(speed,Assets.playerRightShieldAttackIce);
-
-        iceAttackUp = new Animation(speed,Assets.iceAttackUp);
-        iceAttackDown = new Animation(speed,Assets.iceAttackDown);
-        iceAttackLeft = new Animation(speed,Assets.iceAttackLeft);
-        iceAttackRight = new Animation(speed,Assets.iceAttackRight);
     }
+
+    @Override
+    public void stepVertical(Sign sign)
+    //functie de actualizare a pozitiei jucatorului atunci cand se deplaseaza pe vertical
+    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput/final de matrice
+    {
+        updatePositionInMatrix();
+        if(sign== Sign.plus) { //deplasare in jos
+            boolean test =  getCurrentMap().canAdvance(matrixX, matrixY + 1);
+            if (test) {
+                yCoord += stepSize;
+            }
+            else
+            {   //corectie deplasare in jos
+                //cat timp coordonata actuala y e mai mica ca cea ideala
+                if(yCoord<matrixY* Tile.TILE_HEIGHT)
+                {
+                    yCoord += stepSize;
+                }
+            }
+
+        }
+        else { //deplasare in sus
+            boolean test =  getCurrentMap().canAdvance(matrixX, matrixY - 1);
+            if (test) {
+                yCoord -= stepSize;
+            }
+            else
+            {   //corectie deplasare in sus
+                //cat timp coordonata actuala y e mai mare decat cea ideala
+                if(yCoord>matrixY*Tile.TILE_HEIGHT)
+                {
+                    yCoord -= stepSize;
+                }
+            }
+        }
+        updatePositionInMatrix();
+    }
+
+    @Override
+    public void stepHorizontal(Sign sign)
+    //functie de actualizare a pozitiei jucatorului atunci cand se deplaseaza pe vertical
+    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput/final de matrice
+    {
+        updatePositionInMatrix();
+        if(sign== Sign.plus) //deplasare la dreapta
+        {
+            boolean test =  getCurrentMap().canAdvance(matrixX+1, matrixY);
+            if (test) {
+                xCoord += stepSize;}
+            else
+            {
+                //corectie deplasare la dreapta
+                //cat timp pozitia reala pe x este mai mica decat cea ideala
+                if(xCoord<matrixX*Tile.TILE_HEIGHT)
+                {
+                    xCoord += stepSize;
+                }
+            }
+        }
+        else
+        {//deplasare la stanga
+            boolean test =  getCurrentMap().canAdvance(matrixX-1, matrixY);
+            if (test) {
+                xCoord -= stepSize;}
+            else
+            {
+                //corectie deplasare la stanga
+                //cat timp pozitia reala pe x este mai marre de cea ideala
+                if(xCoord>matrixX*Tile.TILE_HEIGHT)
+                {
+                    xCoord -= stepSize;
+                }
+            }
+        }
+        updatePositionInMatrix();
+    }
+
+    @Override
+    public void updatePositionInMatrix()
+    {
+        matrixX = (xCoord+ Tile.TILE_HEIGHT/2) / Tile.TILE_HEIGHT;
+        matrixY = (yCoord+Tile.TILE_HEIGHT/2) / Tile.TILE_HEIGHT;
+        if( getCurrentMap().canKill(player.matrixX, player.matrixY))
+        //todo move this from here! make another function for it!
+        //todo kill the player
+        //daca jucatorul ajunge pe un camp insta kill este teleportat pe pozitia initiala
+        {
+
+            player.isKilled();
+            player.restarted();
+            resetPlayerPosition();
+
+        }
+        //todo other interactions
+    }
+
+    private void resetPlayerPosition()
+    {
+        player.yCoord= getCurrentMap().startY()*Tile.TILE_HEIGHT;
+        player.xCoord=0;
+        player.updatePositionInMatrix();
+    }
+
 }

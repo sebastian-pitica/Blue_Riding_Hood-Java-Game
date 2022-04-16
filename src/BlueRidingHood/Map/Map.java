@@ -1,5 +1,7 @@
 package BlueRidingHood.Map;
 
+import BlueRidingHood.DataBaseHandler.DataBaseHandler;
+
 import java.util.LinkedList;
 
 public class Map  {
@@ -13,49 +15,20 @@ public class Map  {
     private final int[][] matrix;
     //harta in format informatie
     private final int mapNr;
+    private DataBaseHandler dataBaseHandler;
     //indicele hartii
 
 
     private Map(int mapNumber) {
+        this.dataBaseHandler = new DataBaseHandler();
+        dataBaseHandler.createDBMap();
         this.mapNr = mapNumber;
         if(mapNumber ==1) {
-            this.matrix = new int[][]{
-                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                    {0,3,3,3,1,1,1,1,1,1,0,3,0,1,1,1,1,1,0,1,1,1,1,1,1,0,1,0,3,0},
-                    {0,0,0,0,0,0,0,0,1,0,0,1,1,1,0,0,1,0,0,1,0,0,0,0,1,0,1,0,3,0},
-                    {0,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,3,0,1,1,1,1,0,3,0},
-                    {0,1,0,1,0,0,0,0,0,1,0,3,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,1,0},
-                    {0,1,1,1,0,1,1,1,1,1,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,0,0},
-                    {0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,1,1,0},
-                    {0,3,0,1,0,1,1,1,0,3,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0},
-                    {0,3,0,1,1,3,0,1,0,1,0,1,0,0,0,0,0,3,0,0,0,0,1,0,1,1,1,0,3,0},
-                    {0,3,0,1,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,0,1,1,1,1,0,1,1,1,0},
-                    {1,1,1,1,1,1,1,1,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0},
-                    {0,0,0,1,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0},
-                    {0,1,1,1,0,3,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0},
-                    {0,0,0,1,1,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,0},
-                    {0,3,3,3,0,1,1,1,0,3,0,0,1,1,1,1,1,1,1,1,0,1,1,3,0,0,1,1,1,1},
-                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            this.matrix = dataBaseHandler.getMap1();
         }
         else
         {
-            this.matrix = new int[][]{
-                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                    {0,3,0,1,1,1,1,3,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,3,3,3,0},
-                    {0,3,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,0,0,0},
-                    {0,1,1,1,1,1,1,1,1,1,0,1,0,3,1,1,0,1,0,3,1,1,1,1,1,0,1,0,1,0},
-                    {0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,1,1,1,1,0},
-                    {0,1,0,1,0,3,0,1,0,1,1,1,0,1,1,1,1,1,1,1,1,0,1,0,0,0,0,0,1,0},
-                    {0,1,0,1,1,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,1,1,0,1,1,3,0},
-                    {0,3,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,3,0,1,1,1,1,0,1,1,1,0,0,0},
-                    {1,1,1,1,1,1,0,0,0,0,0,3,0,1,1,1,0,1,1,1,0,1,0,0,0,0,1,0,3,0},
-                    {0,1,0,0,0,1,1,1,1,1,1,3,0,1,0,0,0,1,0,0,0,1,1,1,1,0,1,0,3,0},
-                    {0,1,1,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,3,1,0,0,0,0,1,0,1,0,3,0},
-                    {0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,0,0,1,0,1,0,1,1,1,1,0,1,1,1,0},
-                    {0,1,1,1,1,1,0,1,0,0,1,0,1,1,1,1,1,1,0,1,0,1,0,0,1,0,1,0,1,1},
-                    {0,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,0,0,0},
-                    {0,3,1,1,1,1,1,1,0,0,0,0,3,0,3,3,3,1,1,1,0,0,0,0,1,1,1,1,3,0},
-                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            this.matrix = dataBaseHandler.getMap2();
         }
 
         //legenda elemente matrice
@@ -68,13 +41,9 @@ public class Map  {
 
     }
 
-    public static void setCurrentMap(int mapNr)
+    public static void setMap( )
     {
-        switch (mapNr)
-        {
-            case 1: currentMap = map1;
-            case 2: currentMap = map2;
-        }
+        currentMap = map2;
     }
 
     public int getMapNr()
@@ -87,13 +56,34 @@ public class Map  {
         return currentMap;
     }
 
+    public int[][] getMatrix()
+    {
+        return matrix;
+    }
+
     public LinkedList<Integer> getAllAvailablePositions()
     {
-        LinkedList<Integer> result = new LinkedList<Integer>();
+        LinkedList<Integer> result = new LinkedList<>();
 
         for(int i=0;i<16;++i)
         {
             for(int j=0;j<30;++j)
+            {
+                if(matrix[i][j]==1) {
+                    result.add(i*100+j);
+                }
+            }
+        }
+        return result;
+    }
+
+    public LinkedList<Integer> getAllAvailablePositions(int limit)
+    {
+        LinkedList<Integer> result = new LinkedList<>();
+
+        for(int i=0;i<16;++i)
+        {
+            for(int j=limit;j<30;++j)
             {
                 if(matrix[i][j]==1) {
                     result.add(i*100+j);
@@ -168,29 +158,5 @@ public class Map  {
 
     }
 
-    public void testMap()
-        //functie de afisare a mapei in format matriceal
-    {
-        for(int i=0;i<16;++i)
-        {
-            System.out.print("\t"+i+": \t");
-            if(i<=9)
-            {
-                System.out.print("\t");
-            }
-            for(int j=0;j<30;++j)
-            {
-                System.out.print(matrix[i][j]+ "\t");
-            }
-            System.out.println();
-        }
-
-        System.out.print("\t\t\t");
-
-        for(int i=0;i<30;++i)
-        {
-            System.out.print(i+ "\t");
-        }
-    }
 
 }

@@ -1,5 +1,8 @@
 package BlueRidingHood.Game;
 
+import BlueRidingHood.Entities.BasicEntity.Fox1;
+import BlueRidingHood.Entities.EnemieEntity;
+import BlueRidingHood.Entities.EntitiesFactory;
 import BlueRidingHood.Entities.Player;
 import BlueRidingHood.GameWindow.GameWindow;
 import BlueRidingHood.Graphics.Animation.Animation;
@@ -15,6 +18,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
+
+import static BlueRidingHood.Entities.EnemieEntity.actualEntities;
 
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
@@ -58,16 +63,13 @@ public class Game implements Runnable {
     private PlayerInputHandler inputHandler;
     private AnimationHandler animationHandler;
 
-    private Player player;
     private Map currentMap;
     private Image currentMapImage;
-    private Animation currentPlayerAnimation;
-
+    private EntitiesFactory entitiesFactory;
     private boolean displayRect = false;
     //flag pentru check afisare rect informativ
     private boolean grid = false;
 
-    final private int corectiePlayerCoord = 12;
     private static Game game = null;
 
     public static Game provideGame()
@@ -119,12 +121,11 @@ public class Game implements Runnable {
 
         Assets.Init();
 
+        entitiesFactory = EntitiesFactory.getEntitiesFactory();
         currentMap = Map.getCurrentMap();
-        player = new Player(0, currentMap.startY()*Tile.TILE_HEIGHT,0, currentMap.startY(),4,2);
-        currentPlayerAnimation = player.rightStand; //animatia default
-        animationHandler = new AnimationHandler(player);
-        inputHandler = new PlayerInputHandler(player);
-        //todo add gui & others for start
+        animationHandler  = AnimationHandler.getAnimationHandler();
+        inputHandler = PlayerInputHandler.getPlayerInputHandler();
+        actualEntities = entitiesFactory.produceMapEntities();
 
     }
 
@@ -189,7 +190,8 @@ public class Game implements Runnable {
 
         Metoda trebuie sa fie declarata synchronized pentru ca apelul acesteia sa fie semaforizat.
      */
-    public synchronized void StopGame() {
+    public synchronized void StopGame() //todo
+    {
         System.out.println("Game stoped!");
         if (runState) {
             /// Actualizare stare thread
@@ -219,7 +221,7 @@ public class Game implements Runnable {
         Metoda este declarata privat deoarece trebuie apelata doar in metoda run()
      */
     private void Update() {
-        if(gameWindow !=null && player.alive())
+        if(gameWindow !=null)
         //daca exista referinta la fereastra
         {
             //todo vezi daca poti scapa
@@ -227,13 +229,11 @@ public class Game implements Runnable {
             grid = keyboardInputManager.grid;
 
             inputHandler.handler(); //prelucrez inputul de la jucator
+            animationHandler.runAnimations();
 
             currentMap = Map.getCurrentMap();
             currentMapImage = Assets.maps[currentMap.getMapNr()-1];
 
-            currentPlayerAnimation = animationHandler.currentPlayerAnimation(); //preiau animatia curenta
-            currentPlayerAnimation.runAnimation(); //pornesc animatia
-            animationHandler.runCoinAnimations();
             //todo other animations
         }
     }
@@ -260,28 +260,22 @@ public class Game implements Runnable {
             }
         }
         /// Se obtine contextul grafic curent in care se poate desena.
+        assert bufferStrategy != null;
         Graphics graphics = bufferStrategy.getDrawGraphics();
         /// Se sterge ce era
         graphics.clearRect(0, 0, gameWindow.GetWndWidth(), gameWindow.GetWndHeight());
         gameWindowFrame.requestFocusInWindow();
-
         animationHandler.aniomationStopTimeHandler(); //verific daca trebuie oprit o posibila animatie in curs
         graphics.drawImage(currentMapImage, 0, 0,gameWindow.GetWndWidth(), gameWindow.GetWndHeight(), null);
-        currentPlayerAnimation.drawAnimation(graphics,player.xCoord,player.yCoord-corectiePlayerCoord,Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
-        animationHandler.drawCoinAnimations(graphics);
+        animationHandler.drawAnimations(graphics);
         animationHandler.animationStartTimeHandler(); //verific daca trebuie pornita vreo animatie
-
-
+        EnemieEntity.entitysFollowPlayer();
         if(grid) {//grid on //todo vezi daca poti scapa de ele de aici
-            for (int x = 0; x < gameWindow.GetWndWidth(); x += Tile.TILE_HEIGHT)
-                for (int y = 0; y < gameWindow.GetWndHeight(); y += Tile.TILE_HEIGHT) {
-                    graphics.drawRect(x, y, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
-                }
+           drawGrid(graphics);
         }
 
         if(displayRect) { //afisez chenarul daca este necesar
-            graphics.drawRect(player.xCoord, player.yCoord, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
-            graphics.drawRect(player.xCoord+Tile.TILE_HEIGHT/2-5, player.yCoord+Tile.TILE_HEIGHT/2-5,10 ,10);
+           drawRect(graphics);
         }
 
         // end operatie de desenare
@@ -293,46 +287,19 @@ public class Game implements Runnable {
         graphics.dispose();
     }
 
-    @Deprecated
-    private boolean canAdvance(int x, int y, int corner)
-    //idee de functie pentru alte verificari corectii
+    private void drawGrid(Graphics graphics)
     {
-        int realX1, realY1, realX2, realY2;
-        realY1=realY2=realX2=realX1=0;
-        switch (corner){
-            case 1:
-            {
-                realX1 = x; realY1=y;
-                realX2 = x+Tile.TILE_HEIGHT; realY2=y;
+        for (int x = 0; x < gameWindow.GetWndWidth(); x += Tile.TILE_HEIGHT)
+            for (int y = 0; y < gameWindow.GetWndHeight(); y += Tile.TILE_HEIGHT) {
+                graphics.drawRect(x, y, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
             }
-                //up case
-            case 2:
-            {
-                realX1 = x+Tile.TILE_HEIGHT; realY1=y;
-                realX2 = realX1; realY2=y+Tile.TILE_HEIGHT;
-            }
-                //right case
-            case 3:
-            {
-                realX1 = x+Tile.TILE_HEIGHT; realY1=y+Tile.TILE_HEIGHT;
-                realX2 = x; realY2=realY1;
-            }
-                //down case
-            case 4:
-            {
-                realX1 = x; realY1=y+Tile.TILE_HEIGHT;
-                realX2 = x; realY2=y;
-            }
-                //left case
-            default:
-        }
-
-        System.out.println("x1: "+realX1+", y1: "+realY1+"\nx2: "+realX2+", y2: "+realY2);
-        System.out.println("mx1: "+realX1/Tile.TILE_HEIGHT+", my1: "+realY1/Tile.TILE_HEIGHT+"\nmx2: "+realX2/Tile.TILE_HEIGHT+", my2: "+realY2/Tile.TILE_HEIGHT);
-
-        return false;
-
     }
 
+    private void drawRect(Graphics graphics)
+    {
+        graphics.drawRect(Player.getPlayer().xCoord, Player.getPlayer().yCoord, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
+        graphics.drawRect(Player.getPlayer().xCoord+Tile.TILE_HEIGHT/2-5, Player.getPlayer().yCoord+Tile.TILE_HEIGHT/2-5,10 ,10);
+    }
 
 }
+

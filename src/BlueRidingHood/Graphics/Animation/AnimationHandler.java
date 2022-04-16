@@ -1,10 +1,11 @@
 package BlueRidingHood.Graphics.Animation;
 
-import BlueRidingHood.Entities.Attack.FireAttack;
-import BlueRidingHood.Entities.Attack.IceAttack;
 import BlueRidingHood.Entities.Coin.Coin;
 import BlueRidingHood.Entities.Coin.CoinFactory;
+import BlueRidingHood.Entities.EnemieEntity;
 import BlueRidingHood.Entities.Player;
+import BlueRidingHood.Game.Direction;
+import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.InputManager.KeyboardInputManager;
 import BlueRidingHood.InputManager.MouseInputManager;
 import BlueRidingHood.Map.Map;
@@ -12,6 +13,8 @@ import BlueRidingHood.Map.Map;
 import java.awt.*;
 import java.util.Objects;
 import java.util.Vector;
+
+import static BlueRidingHood.Entities.EnemieEntity.actualEntities;
 
 public class AnimationHandler {
 
@@ -22,24 +25,34 @@ public class AnimationHandler {
     private Vector<Coin> coins;
     private long shieldStartTime;
     private long shieldStopTime;
+    final private int corectiePlayerCoord = 12;
+    private Animation currentPlayerAnimation;
+
     //todo other entities animations: monede, inamici, atacuri
     //todo other entities
     //todo possible other time animations: atacuri, etc
     //todo init pentru alte entitati
 
-    public AnimationHandler(Player player)
+    private static AnimationHandler animationHandler = null;
+
+    public static AnimationHandler getAnimationHandler()
+    {
+        if(animationHandler ==null)
+        {
+            animationHandler = new AnimationHandler();
+        }
+
+        return animationHandler;
+    }
+
+    protected AnimationHandler()
     {
         keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
         mouseInputManager = MouseInputManager.provideMouseInputManager();
-        this.player = player;
+        this.player = Player.getPlayer();
+        currentPlayerAnimation = player.rightStand; //animatia default
         coinInit();
-        attackInit();
-    }
 
-    private void attackInit()
-    {
-        FireAttack.initAnimation();
-        IceAttack.initAnimation();
     }
 
     private void coinInit()
@@ -49,35 +62,35 @@ public class AnimationHandler {
         coins = coinFactory.createCoins(currentMap);
     }
 
-    public Animation currentPlayerAnimation()
+    private void currentPlayerAnimation()
     {
         //todo add la documentatie deficitul de animatie
         //pentru urcare/coborare (deplasare pe axa y) nu exista spriteuri
         //in aceste cazuri animatia de deplasare este cea a ultimei directii pe orizontala
-        Animation result = null;
+
 
         if (keyboardInputManager.up || keyboardInputManager.down) {
 
-            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "left"))
+            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.left))
             {
                 if(!player.shieldActive) {
-                    result = player.leftRun;
+                    currentPlayerAnimation = player.leftRun;
                 }
                 else
                 {
-                    result = player.leftShieldRun;
+                    currentPlayerAnimation = player.leftShieldRun;
                 }
             }
             else
             {
-                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "right"))
+                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.right))
                 {
                     if(!player.shieldActive) {
-                        result = player.rightRun;
+                        currentPlayerAnimation = player.rightRun;
                     }
                     else
                     {
-                        result = player.rightShieldRun;
+                        currentPlayerAnimation = player.rightShieldRun;
                     }
                 }
             }
@@ -85,20 +98,20 @@ public class AnimationHandler {
 
         if (keyboardInputManager.left) {
             if(!player.shieldActive) {
-                result = player.leftRun;
+                currentPlayerAnimation = player.leftRun;
             }
             else
             {
-                result = player.leftShieldRun;
+                currentPlayerAnimation = player.leftShieldRun;
             }
         }
         if (keyboardInputManager.right) {
             if(!player.shieldActive) {
-                result = player.rightRun;
+                currentPlayerAnimation = player.rightRun;
             }
             else
             {
-                result = player.rightShieldRun;
+                currentPlayerAnimation = player.rightShieldRun;
             }
         }
 
@@ -106,70 +119,70 @@ public class AnimationHandler {
         //daca s-a facut reset sau nu s-a apasat nici o tasta de miscare
         //todo add to documentatie explicatii
         {
-            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "left"))
+            if(Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.left))
             {
                 if(!player.shieldActive) {
-                    result = player.leftStand;
+                    currentPlayerAnimation = player.leftStand;
                 }
                 else
                 {
-                    result = player.leftShieldStand;
+                    currentPlayerAnimation = player.leftShieldStand;
                 }
             }
             else
             {
-                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, "right"))
+                if(Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.right))
                 {
                     if(!player.shieldActive) {
-                        result = player.rightStand;
+                        currentPlayerAnimation = player.rightStand;
                     }
                     else
                     {
-                        result = player.rightShieldStand;
+                        currentPlayerAnimation = player.rightShieldStand;
                     }
                 }
             }
         }
 
-        //todo ice attack sprite
+
         //todo check player alive
-        if(keyboardInputManager.iceAttack)
-        {
+
+        if(keyboardInputManager.attack) {
             //todo add explicatii documentatie
             //daca este apasata tasta de atac
-            if (player.iceAttackActive) {
+            if (player.attackActive) {
                 //daca atacul este in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.left)) {
                     if (!player.shieldActive) {
-                        result = player.leftAttackIce;
+                        currentPlayerAnimation = player.leftAttack;
                     } else {
-                        result = player.leftShieldAttackIce;
+                        currentPlayerAnimation = player.leftShieldAttack;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.right)) {
                         if (!player.shieldActive) {
-                            result = player.rightAttackIce;
+                            currentPlayerAnimation = player.rightAttack;
                         } else {
-                            result = player.rightShieldAttackIce;
+                            currentPlayerAnimation = player.rightShieldAttack;
                         }
                     }
                 }
             } else {
                 //daca atacul nu este in desfasurare
-                player.iceAttackActive = true;
+                player.attackActive = true;
                 //atacul este acum in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.left)) {
                     if (!player.shieldActive) {
-                        result = player.leftStartAttackIce;
+                        currentPlayerAnimation = player.leftDrawSword;
                     } else {
-                        result = player.leftShieldStartAttackIce;
+                        currentPlayerAnimation = player.leftShieldDrawSword;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.right)) {
                         if (!player.shieldActive) {
-                            result = player.rightStartAttackIce;
+                            currentPlayerAnimation = player.rightDrawSword;
                         } else {
-                            result = player.rightShieldStartAttackIce;
+                            currentPlayerAnimation = player.rightShieldDrawSword;
                         }
                     }
                 }
@@ -178,96 +191,31 @@ public class AnimationHandler {
         else
         {
             //daca nu a fost apasata tasta de atac, dar atacul este in desfasurare
-            if(player.iceAttackActive) {
-                player.iceAttackActive = false;
+            if(player.attackActive) {
+                player.attackActive = false;
                 //atacul este incheiat
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
+                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.left)) {
                     if (!player.shieldActive) {
-                        result = player.leftStopAttackIce;
+                        currentPlayerAnimation = player.leftRetractSword;
                     } else {
-                        result = player.leftShieldStopAttackIce;
+                        currentPlayerAnimation = player.leftShieldRetractSword;
                     }
                 } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
+                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, Direction.right)) {
                         if (!player.shieldActive) {
-                            result = player.rightStopAttackIce;
+                            currentPlayerAnimation = player.rightRetractSword;
                         } else {
-                            result = player.rightShieldStopAttackIce;
+                            currentPlayerAnimation = player.rightShieldRetractSword;
                         }
                     }
                 }
             }
         }
 
-        if(keyboardInputManager.swordAttack) {
-            //todo add explicatii documentatie
-            //daca este apasata tasta de atac
-            if (player.swordAttackActive) {
-                //daca atacul este in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftAttackSword;
-                    } else {
-                        result = player.leftShieldAttackSword;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightAttackSword;
-                        } else {
-                            result = player.rightShieldAttackSword;
-                        }
-                    }
-                }
-            } else {
-                //daca atacul nu este in desfasurare
-                player.swordAttackActive = true;
-                //atacul este acum in desfasurare
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftDrawSword;
-                    } else {
-                        result = player.leftShieldDrawSword;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightDrawSword;
-                        } else {
-                            result = player.rightShieldDrawSword;
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            //daca nu a fost apasata tasta de atac, dar atacul este in desfasurare
-            if(player.swordAttackActive) {
-                player.swordAttackActive = false;
-                //atacul este incheiat
-                if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "left")) {
-                    if (!player.shieldActive) {
-                        result = player.leftRetractSword;
-                    } else {
-                        result = player.leftShieldRetractSword;
-                    }
-                } else {
-                    if (Objects.equals(keyboardInputManager.lastHorizontalDirection, "right")) {
-                        if (!player.shieldActive) {
-                            result = player.rightRetractSword;
-                        } else {
-                            result = player.rightShieldRetractSword;
-                        }
-                    }
-                }
-            }
-        }
-
-        return result;
     }
 
     public void animationStartTimeHandler() //todo for all animations
+            //momentan doar shield
     {
         if(keyboardInputManager.shieldActivated &&
                 timeToStartAnimation(shieldStopTime,"shield")) //daca scutul a fost activat
@@ -275,6 +223,7 @@ public class AnimationHandler {
           player.shieldActive = true;
           shieldStartTime = System.nanoTime();
         }
+
     }
 
     public void aniomationStopTimeHandler() //todo for all animations
@@ -285,19 +234,18 @@ public class AnimationHandler {
             player.shieldActive = false;
             shieldStopTime = System.nanoTime();
         }
+
     }
 
     private boolean timeToStartAnimation(long stopTime, String animation)
     {
         //todo for all timed animation
         long nowTime = System.nanoTime(); //masor timpul actual
-        int secondsLimit=0;
-        switch (animation) {
+        int secondsLimit = switch (animation) {
             //todo verific daca e mai mare ca 15 secunde
-            case "shield": secondsLimit = 5; break;
-            case "iceattack": secondsLimit = 1;break;
-            case "fireattack": secondsLimit = 3; break;
-        }
+            case "shield" -> 5;
+            default -> 0;
+        };
 
         if ((nowTime - stopTime) / secondsLimit >= 1000000000) //for shield animation switch case
         //todo variabila cu limita de secunde
@@ -328,7 +276,37 @@ public class AnimationHandler {
 
     }
 
-    public void runCoinAnimations() {
+    public void runAnimations()
+    {
+        runEntitiesAnimation();
+        runCoinAnimations();
+        runPlayerAnimation();
+    }
+
+    public void drawAnimations(Graphics graphics)
+    {
+        drawPlayerAnimation(graphics);
+        drawCoinAnimations(graphics);
+        drawEntitiesAnimation(graphics);
+    }
+
+    private void runEntitiesAnimation()
+    {
+        for(EnemieEntity element: actualEntities)
+        {
+            element.runAnimation();
+        }
+    }
+
+    private void drawEntitiesAnimation(Graphics g)
+    {
+        for(EnemieEntity element: actualEntities)
+        {
+            element.draw(g);
+        }
+    }
+
+    private void runCoinAnimations() {
 
         checkCoinVector();
 
@@ -336,7 +314,7 @@ public class AnimationHandler {
 
     }
 
-    private void checkCoinVector()
+    private void checkCoinVector() //todo enemie
     {
         if(isCoinAtThisPosition(player.matrixX, player.matrixY))
         {
@@ -346,11 +324,12 @@ public class AnimationHandler {
 
         if(currentMap != Map.getCurrentMap() || coins.size() == 0)
         {
+            currentMap = Map.getCurrentMap();
             coinInit();
         }
     }
 
-    public void drawCoinAnimations(Graphics g)
+    private void drawCoinAnimations(Graphics g)
     {
         for(Coin element: coins)
         {
@@ -373,5 +352,15 @@ public class AnimationHandler {
     private void eliminateCoinAtCoords(int x, int y)
     {
         coins.removeIf(element -> element.xCoord == x && element.yCoord == y);
+    }
+
+    private void drawPlayerAnimation(Graphics graphics) {
+        currentPlayerAnimation();
+        currentPlayerAnimation.drawAnimation(graphics,player.xCoord,player.yCoord-corectiePlayerCoord, Tile.TILE_HEIGHT,Tile.TILE_WIDTH);
+    }
+
+    private void runPlayerAnimation()
+    {
+        currentPlayerAnimation.runAnimation(); //pornesc animatiad
     }
 }

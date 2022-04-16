@@ -3,7 +3,7 @@ package BlueRidingHood.InputManager;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class MouseInputManager implements MouseListener { // TODO: 24.03.2022
+public class MouseInputManager implements MouseListener { // TODO
 
     static private MouseInputManager mouseInputManager=null;
 
@@ -16,7 +16,7 @@ public class MouseInputManager implements MouseListener { // TODO: 24.03.2022
         return mouseInputManager;
     }
 
-    protected MouseInputManager(){}; //todo
+    protected MouseInputManager(){} //todo
 
     @Override
     public void mouseClicked(MouseEvent e) {
