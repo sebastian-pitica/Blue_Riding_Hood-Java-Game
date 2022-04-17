@@ -43,8 +43,7 @@ public class Fox1 extends EnemieEntity {
 
     @Override
     public void runAnimation() {
-        currentAnimation.runAnimation();
-    }
+        currentAnimation.runAnimation();}
 
     @Override
     public void draw(Graphics graphics) {

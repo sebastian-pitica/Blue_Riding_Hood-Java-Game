@@ -1,11 +1,9 @@
 package BlueRidingHood.Game;
 
-import BlueRidingHood.Entities.BasicEntity.Fox1;
 import BlueRidingHood.Entities.EnemieEntity;
 import BlueRidingHood.Entities.EntitiesFactory;
 import BlueRidingHood.Entities.Player;
 import BlueRidingHood.GameWindow.GameWindow;
-import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Animation.AnimationHandler;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
@@ -20,6 +18,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 
 import static BlueRidingHood.Entities.EnemieEntity.actualEntities;
+
 
 /*! \class Game
     \brief Clasa principala a intregului proiect. Implementeaza Game - Loop (Update -> Draw)
@@ -66,6 +65,7 @@ public class Game implements Runnable {
     private Map currentMap;
     private Image currentMapImage;
     private EntitiesFactory entitiesFactory;
+
     private boolean displayRect = false;
     //flag pentru check afisare rect informativ
     private boolean grid = false;
@@ -270,6 +270,7 @@ public class Game implements Runnable {
         animationHandler.drawAnimations(graphics);
         animationHandler.animationStartTimeHandler(); //verific daca trebuie pornita vreo animatie
         EnemieEntity.entitysFollowPlayer();
+
         if(grid) {//grid on //todo vezi daca poti scapa de ele de aici
            drawGrid(graphics);
         }
@@ -300,6 +301,7 @@ public class Game implements Runnable {
         graphics.drawRect(Player.getPlayer().xCoord, Player.getPlayer().yCoord, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
         graphics.drawRect(Player.getPlayer().xCoord+Tile.TILE_HEIGHT/2-5, Player.getPlayer().yCoord+Tile.TILE_HEIGHT/2-5,10 ,10);
     }
+
 
 }
 

@@ -10,6 +10,7 @@ public abstract class Entity {//todo ce detine fiecare entitate
     public int matrixX,matrixY,xCoord,yCoord;  //cordonatele carteziene si matriceale ale entitatii
     protected boolean alive=false;
 
+
     //todo vezi ca close atack e la toate mai putin zawalfo 1 momentan
    // Entity createEntity();
 
@@ -96,6 +97,7 @@ public abstract class Entity {//todo ce detine fiecare entitate
 
     public abstract void isHit();
     public abstract boolean alive();
+
 
 }
 

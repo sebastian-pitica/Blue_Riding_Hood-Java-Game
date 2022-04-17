@@ -1,6 +1,4 @@
 package BlueRidingHood.Entities;
-
-
 import BlueRidingHood.Game.Sign;
 import BlueRidingHood.Graphics.Animation.Animation;
 
@@ -18,12 +16,14 @@ public abstract class EnemieEntity extends Entity {
     protected Animation right;
     protected Animation currentAnimation;
     protected LinkedList<Integer> path;
-    protected long startTime;
+    protected int oldX, oldY;
 
     protected void followPlayer()
     {
-        if(Player.isPositionChanged())
+        if(Player.isPositionChanged() && (oldX!=Player.getPlayer().matrixX || oldY!=Player.getPlayer().matrixY))
         {
+            oldX=Player.getPlayer().matrixX;
+            oldY=Player.getPlayer().matrixY;
             this.path = getPath(matrixY * 100 + matrixX, Player.getPlayer().matrixY * 100 + Player.getPlayer().matrixX);
         }
 
@@ -31,10 +31,12 @@ public abstract class EnemieEntity extends Entity {
             if (this.path == null) {
                 this.path = getPath(matrixY * 100 + matrixX, Player.getPlayer().matrixY * 100 + Player.getPlayer().matrixX);
                 //startTime = System.nanoTime();
+                oldX=Player.getPlayer().matrixX;
+                oldY=Player.getPlayer().matrixY;
             }
            // if(System.nanoTime()-startTime>=5000000) {
             //limit time
-                startTime = System.nanoTime();
+               // startTime = System.nanoTime();
                 int next = path.get(0);
 
                 int nextPosY = next / 100;
@@ -50,7 +52,6 @@ public abstract class EnemieEntity extends Entity {
                     } else if (nextPosX < matrixX) {
                         stepHorizontal(Sign.minus);
                     }
-
                     if (nextPosY > matrixY) {
                         stepVertical(Sign.plus);
                     } else if (nextPosY < matrixY) {
@@ -75,4 +76,5 @@ public abstract class EnemieEntity extends Entity {
     public abstract void runAnimation();
 
     public abstract void draw(Graphics graphics);
+
 }

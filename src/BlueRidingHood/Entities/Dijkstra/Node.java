@@ -169,7 +169,7 @@ public class Node {
             build();
             buildMapNodes();
             buildAdiMatrix();
-
+            System.out.print("\n\n{");
         }
 
         if(start!= lastStart || stop!=lastStop)

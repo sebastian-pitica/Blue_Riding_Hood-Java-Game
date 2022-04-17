@@ -9,12 +9,8 @@ import java.awt.*;
 
 public class Wolf extends EnemieEntity {
 
-    Animation up;
-    Animation down;
-    Animation left;
-    Animation right;
-
     private void InitAnimation() {
+
         up = new Animation(6, Assets.wolfUp);
         down = new Animation(6, Assets.wolfDown);
         left = new Animation(6, Assets.wolfLeft);
@@ -22,6 +18,7 @@ public class Wolf extends EnemieEntity {
     }
     public Wolf( int entityMatrixX, int entityMatrixY)
     {
+
         this.alive = true;
         this.attackResistence = 10;
         this.matrixX = entityMatrixX;
@@ -46,10 +43,11 @@ public class Wolf extends EnemieEntity {
     @Override
     public void runAnimation() {
         currentAnimation.runAnimation();
-    }
 
+    }
     @Override
     public void draw(Graphics graphics) {
         currentAnimation.drawAnimation(graphics,matrixX*Tile.TILE_WIDTH+Tile.TILE_HEIGHT/4,matrixY*Tile.TILE_HEIGHT+Tile.TILE_HEIGHT/4,Tile.TILE_WIDTH/2,Tile.TILE_HEIGHT/2);
+
     }
 }

@@ -29,7 +29,6 @@ public class Fox2 extends EnemieEntity {
         this.path = null;
         currentAnimation = right;
     }
-
     @Override
     public void isHit() {
         hitCounter++;
@@ -43,10 +42,12 @@ public class Fox2 extends EnemieEntity {
     @Override
     public void runAnimation() {
         currentAnimation.runAnimation();
+
     }
 
     @Override
     public void draw(Graphics graphics) {
         currentAnimation.drawAnimation(graphics,matrixX*Tile.TILE_WIDTH+Tile.TILE_HEIGHT/4,matrixY*Tile.TILE_HEIGHT+Tile.TILE_HEIGHT/4,Tile.TILE_WIDTH/2,Tile.TILE_HEIGHT/2);
+
     }
 }

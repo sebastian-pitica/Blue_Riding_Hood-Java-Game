@@ -41,7 +41,6 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         this.xCoord = 0;
         this.yCoord = Map.getCurrentMap().startY()* Tile.TILE_HEIGHT;
         shieldActive = attackActive =  false;
-        player = this;
         animationInit();
     }
 
@@ -78,11 +77,6 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         }
     }
 
-    @Override
-    public boolean alive() {
-        return alive;
-    }
-
     public void isKilled()
     {
         alive = false;
@@ -93,6 +87,11 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         alive = true;
         score = 0;
         shieldActive = attackActive =  false;
+    }
+
+    @Override
+    public boolean alive() {
+        return alive;
     }
 
     public void resetHitCounter()
@@ -129,6 +128,7 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
                 "CloseAttackPower: "+ attackPower +", Speed: "+stepSize+"\n"
             +"Score: "+score+"\n");
+
     }
 
     private void animationInit()
@@ -232,6 +232,7 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
             }
         }
         updatePositionInMatrix();
+
     }
 
     @Override

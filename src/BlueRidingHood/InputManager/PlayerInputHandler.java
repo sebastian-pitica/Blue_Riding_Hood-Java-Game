@@ -27,6 +27,7 @@ public class PlayerInputHandler {
     }
 
     protected PlayerInputHandler()
+
     {
         keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
         mouseInputManager = MouseInputManager.provideMouseInputManager();
@@ -37,7 +38,6 @@ public class PlayerInputHandler {
     //functie care se ocupa cu prelucrarea inputului de la jucator
     {
         currentMap = Map.getCurrentMap();
-   
 
         if(!player.attackActive ) {
             //restrictionez miscarile si atacul simultan
@@ -112,7 +112,6 @@ public class PlayerInputHandler {
         }
 
     }
-
 
     private void win()
     //functie care determina ce se intampla dupa ce se petrece win la nivelul curent
