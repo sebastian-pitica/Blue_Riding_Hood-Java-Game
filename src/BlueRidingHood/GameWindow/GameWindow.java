@@ -2,6 +2,7 @@ package BlueRidingHood.GameWindow;
 
 import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.InputManager.KeyboardInputManager;
+import BlueRidingHood.InputManager.MouseInputManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,11 +77,10 @@ public class GameWindow {
         windowFrame.setLocationRelativeTo(null);
         /// Implicit o fereastra cand este creata nu este vizibila motiv pentru
         /// care trebuie setata aceasta proprietate
-        windowFrame.setVisible(true);
 
         //managerul de keyboar input
-        KeyboardInputManager keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
-        windowFrame.addKeyListener(keyboardInputManager);
+        windowFrame.addKeyListener(KeyboardInputManager.provideKeyboardInputManager());
+        windowFrame.setVisible(true);
         windowFrame.setFocusable(true);
         windowFrame.requestFocusInWindow();
         //adaug un input manager pentru tastatura
@@ -88,6 +88,7 @@ public class GameWindow {
 
         /// Creaza obiectul de tip canvas (panza) pe care se poate desena.
         canvas = new Canvas();
+        canvas.addMouseListener(MouseInputManager.provideMouseInputManager());
         /// In aceeasi maniera trebuiesc setate proprietatile pentru acest obiect
         /// canvas (panza): dimensiuni preferabile, minime, maxime etc.
         /// Urmotorul apel de functie seteaza dimensiunea "preferata"/implicita
@@ -103,6 +104,7 @@ public class GameWindow {
         /// Avand in vedere ca obiectul de tip canvas, proaspat creat, nu este automat
         /// adaugat in fereastra trebuie apelata metoda add a obiectul wndFrame
         windowFrame.add(canvas);
+
         /// Urmatorul apel de functie are ca scop eventuala redimensionare a ferestrei
         /// ca tot ce contine sa poate fi afisat complet
         windowFrame.pack();

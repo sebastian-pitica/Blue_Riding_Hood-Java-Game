@@ -8,6 +8,7 @@ import BlueRidingHood.Graphics.Animation.AnimationHandler;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.InputManager.KeyboardInputManager;
+import BlueRidingHood.InputManager.MouseInputManager;
 import BlueRidingHood.InputManager.PlayerInputHandler;
 import BlueRidingHood.Map.Map;
 

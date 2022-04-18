@@ -90,9 +90,9 @@ public class DijkstrasAlgorithm {
     // array and shortest paths
     private static void printAndFormSolution(int startVertex, int[] distances, int[] parents, int vertexIndex) {
 
-        System.out.print("\n" + startVertex + " -> ");
-        System.out.print(vertexIndex + " \t\t ");
-        System.out.print(distances[vertexIndex] + "\t\t");
+       // System.out.print("\n" + startVertex + " -> ");
+       // System.out.print(vertexIndex + " \t\t ");
+       // System.out.print(distances[vertexIndex] + "\t\t");
         printAndFormPath(vertexIndex, parents);
 
     }
@@ -110,6 +110,6 @@ public class DijkstrasAlgorithm {
         printAndFormPath(parents[currentVertex], parents);
         pathNodes.add(currentVertex);
 
-        System.out.print(currentVertex + " ");
+       // System.out.print(currentVertex + " ");
     }
 }
