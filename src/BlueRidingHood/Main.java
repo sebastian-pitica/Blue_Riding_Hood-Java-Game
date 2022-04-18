@@ -21,6 +21,7 @@ public class Main {
     //todo vezi animatii proaste
     //todo player inside set current animation
     //todo entities set curent animations
+    //todo printer
     public static void main(String[] args) {
         Game BlueRidingHood = Game.provideGame();
         new DataBaseHandler();

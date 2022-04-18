@@ -1,22 +1,22 @@
-package BlueRidingHood.Entities.BasicEntity;
+package BlueRidingHood.Entities.BasicEnemieEntities;
 
+import BlueRidingHood.Animation.Animation;
 import BlueRidingHood.Entities.EnemieEntity;
-import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
 
 import java.awt.*;
 
-public class Fox2 extends EnemieEntity {
+public class Bear1 extends EnemieEntity {
 
-     private void InitAnimation() {
-        up = new Animation(6, Assets.fox2Up);
-        down = new Animation(6, Assets.fox2Down);
-        left = new Animation(6, Assets.fox2Left);
-        right = new Animation(6, Assets.fox2Right);
+    private void InitAnimation() {
+        up = new Animation(6, Assets.bear1Up);
+        down = new Animation(6, Assets.bear1Down);
+        left = new Animation(6, Assets.bear1Left);
+        right = new Animation(6, Assets.bear1Right);
     }
 
-    public Fox2( int entityMatrixX, int entityMatrixY)
+    public Bear1( int entityMatrixX, int entityMatrixY)
     {
         this.attackPower = 1;
         this.alive = true;
@@ -29,9 +29,16 @@ public class Fox2 extends EnemieEntity {
         this.path = null;
         currentAnimation = right;
     }
+
     @Override
-    public void isHit() {
+    public void isHit()
+    //todo is hit with quantity
+    {
         hitCounter++;
+        if(hitCounter>attackResistence)
+        {
+            alive=false;
+        }
     }
 
     @Override
@@ -42,12 +49,12 @@ public class Fox2 extends EnemieEntity {
     @Override
     public void runAnimation() {
         currentAnimation.runAnimation();
-
-    }
+   }
 
     @Override
     public void draw(Graphics graphics) {
         currentAnimation.drawAnimation(graphics,matrixX*Tile.TILE_WIDTH+Tile.TILE_HEIGHT/4,matrixY*Tile.TILE_HEIGHT+Tile.TILE_HEIGHT/4,Tile.TILE_WIDTH/2,Tile.TILE_HEIGHT/2);
-
     }
+
+
 }

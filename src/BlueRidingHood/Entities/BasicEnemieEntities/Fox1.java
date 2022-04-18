@@ -1,24 +1,25 @@
-package BlueRidingHood.Entities.BasicEntity;
+package BlueRidingHood.Entities.BasicEnemieEntities;
 
+import BlueRidingHood.Animation.Animation;
 import BlueRidingHood.Entities.EnemieEntity;
-import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
 
 import java.awt.*;
 
-public class Wolf extends EnemieEntity {
+public class Fox1 extends EnemieEntity {
+    //todo vezi animatii proaste
 
     private void InitAnimation() {
-
-        up = new Animation(6, Assets.wolfUp);
-        down = new Animation(6, Assets.wolfDown);
-        left = new Animation(6, Assets.wolfLeft);
-        right = new Animation(6, Assets.wolfRight);
+        up = new Animation(6, Assets.fox1Up);
+        down = new Animation(6, Assets.fox1Down);
+        left = new Animation(6, Assets.fox1Left);
+        right = new Animation(6, Assets.fox1Right);
     }
-    public Wolf( int entityMatrixX, int entityMatrixY)
-    {
 
+    public Fox1( int entityMatrixX, int entityMatrixY)
+    {
+        this.attackPower = 1;
         this.alive = true;
         this.attackResistence = 10;
         this.matrixX = entityMatrixX;
@@ -33,6 +34,10 @@ public class Wolf extends EnemieEntity {
     @Override
     public void isHit() {
         hitCounter++;
+        if(hitCounter>attackResistence)
+        {
+            alive=false;
+        }
     }
 
     @Override
@@ -42,12 +47,10 @@ public class Wolf extends EnemieEntity {
 
     @Override
     public void runAnimation() {
-        currentAnimation.runAnimation();
+        currentAnimation.runAnimation();}
 
-    }
     @Override
     public void draw(Graphics graphics) {
         currentAnimation.drawAnimation(graphics,matrixX*Tile.TILE_WIDTH+Tile.TILE_HEIGHT/4,matrixY*Tile.TILE_HEIGHT+Tile.TILE_HEIGHT/4,Tile.TILE_WIDTH/2,Tile.TILE_HEIGHT/2);
-
     }
 }

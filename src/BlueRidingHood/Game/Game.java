@@ -1,16 +1,17 @@
 package BlueRidingHood.Game;
 
+import BlueRidingHood.Animation.AnimationHandler;
 import BlueRidingHood.Entities.EnemieEntity;
-import BlueRidingHood.Entities.EntitiesFactory;
 import BlueRidingHood.Entities.Player;
+import BlueRidingHood.Factory.EntitiesFactory;
 import BlueRidingHood.GameWindow.GameWindow;
-import BlueRidingHood.Graphics.Animation.AnimationHandler;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.InputManager.KeyboardInputManager;
 import BlueRidingHood.InputManager.MouseInputManager;
 import BlueRidingHood.InputManager.PlayerInputHandler;
 import BlueRidingHood.Map.Map;
+import BlueRidingHood.Observer.Observer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,11 +55,12 @@ import static BlueRidingHood.Entities.EnemieEntity.actualEntities;
         - public synchronized void start(); //metoda publica de pornire a jocului
         - public synchronized void stop()   //metoda publica de oprire a jocului
  */
-public class Game implements Runnable {
+public class Game implements Runnable, Observer {
     private GameWindow gameWindow;        /*!< Fereastra in care se va desena tabla jocului*/
     private boolean runState;   /*!< Flag ce starea firului de executie.*/
     private Thread gameThread; /*!< Referinta catre thread-ul de update si draw al ferestrei*/
     private KeyboardInputManager keyboardInputManager;
+    private MouseInputManager mouseInputManager;
     private JFrame gameWindowFrame;
     private PlayerInputHandler inputHandler;
     private AnimationHandler animationHandler;
@@ -66,9 +68,9 @@ public class Game implements Runnable {
     private Map currentMap;
     private Image currentMapImage;
     private EntitiesFactory entitiesFactory;
+    private Player player;
 
     private boolean displayRect = false;
-    //flag pentru check afisare rect informativ
     private boolean grid = false;
 
     private static Game game = null;
@@ -115,6 +117,7 @@ public class Game implements Runnable {
         /// Se incarca toate elementele grafice (dale)
 
         keyboardInputManager = KeyboardInputManager.provideKeyboardInputManager();
+        mouseInputManager = MouseInputManager.provideMouseInputManager();
         gameWindowFrame = gameWindow.getWindowFrame();
         //preiau referinta la fereastra si keyboard input manager
         gameWindowFrame.addWindowListener(new WindowAdapter() {public void windowClosing(WindowEvent e) {StopGame();System.exit(0);}});
@@ -122,8 +125,12 @@ public class Game implements Runnable {
 
         Assets.Init();
 
+        player = Player.getPlayer();
         entitiesFactory = EntitiesFactory.getEntitiesFactory();
         currentMap = Map.getCurrentMap();
+        currentMapImage = Assets.maps[currentMap.getMapNr()-1];
+
+        currentMap.attach(this);
         animationHandler  = AnimationHandler.getAnimationHandler();
         inputHandler = PlayerInputHandler.getPlayerInputHandler();
         actualEntities = entitiesFactory.produceMapEntities();
@@ -232,9 +239,6 @@ public class Game implements Runnable {
             inputHandler.handler(); //prelucrez inputul de la jucator
             animationHandler.runAnimations();
 
-            currentMap = Map.getCurrentMap();
-            currentMapImage = Assets.maps[currentMap.getMapNr()-1];
-
             //todo other animations
         }
     }
@@ -271,6 +275,7 @@ public class Game implements Runnable {
         animationHandler.drawAnimations(graphics);
         animationHandler.animationStartTimeHandler(); //verific daca trebuie pornita vreo animatie
         EnemieEntity.entitysFollowPlayer();
+        EnemieEntity.checkHitPlayer();
 
         if(grid) {//grid on //todo vezi daca poti scapa de ele de aici
            drawGrid(graphics);
@@ -299,10 +304,16 @@ public class Game implements Runnable {
 
     private void drawRect(Graphics graphics)
     {
-        graphics.drawRect(Player.getPlayer().xCoord, Player.getPlayer().yCoord, Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
-        graphics.drawRect(Player.getPlayer().xCoord+Tile.TILE_HEIGHT/2-5, Player.getPlayer().yCoord+Tile.TILE_HEIGHT/2-5,10 ,10);
+        graphics.drawRect(player.getxCoord(), player.getyCoord(), Tile.TILE_WIDTH, Tile.TILE_HEIGHT);
+        graphics.drawRect(player.getxCoord() +Tile.TILE_HEIGHT/2-5, player.getyCoord() +Tile.TILE_HEIGHT/2-5,10 ,10);
     }
 
 
+    @Override
+    public void update() {
+            currentMap = Map.getCurrentMap();
+            currentMapImage = Assets.maps[currentMap.getMapNr()-1];
+
+    }
 }
 

@@ -1,4 +1,4 @@
-package BlueRidingHood.Entities.Coin;
+package BlueRidingHood.Factory;
 
 import BlueRidingHood.Map.Map;
 
@@ -23,7 +23,7 @@ public class CoinFactory {
         return factory;
     }
 
-    public Vector<Coin> createCoins(Map currentMap)
+    public Vector<Integer> createCoins(Map currentMap)
     {
 
         LinkedList<Integer> availablePositions = currentMap.getAllAvailablePositions();
@@ -34,24 +34,19 @@ public class CoinFactory {
 
         Random randomGenerator = new Random();
 
+        Vector<Integer> coinsPositions = new Vector<>(28);
+        int i=0;
+
         while(actualPositionsToDraw.size()!=28)
         {
             actualPositionsToDraw.add(availablePositions.get(randomGenerator.nextInt(length)));
         }
 
-        Vector<Coin> coins = new Vector<>(28);
-        int i=0;
-
         for(int position : actualPositionsToDraw)
         {
-            int y = position/100;
-            int x = position%100;
-
-            if(x>=0 && y>=0) {
-                coins.insertElementAt(new Coin(x, y),i++);
-            }
+            coinsPositions.insertElementAt(position,i++);
         }
 
-        return coins;
+        return coinsPositions;
     }
 }

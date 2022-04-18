@@ -1,4 +1,4 @@
-package BlueRidingHood.Entities.Dijkstra;
+package BlueRidingHood.Dijkstra;
 
 import BlueRidingHood.Map.Map;
 

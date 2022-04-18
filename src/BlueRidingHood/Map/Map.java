@@ -1,10 +1,12 @@
 package BlueRidingHood.Map;
 
 import BlueRidingHood.DataBaseHandler.DataBaseHandler;
+import BlueRidingHood.Observer.Observer;
+import BlueRidingHood.Observer.Subject;
 
 import java.util.LinkedList;
 
-public class Map  {
+public class Map implements Subject {
     //todo pozitie player, pozitie inamici, check, return, etc
     //todo remove coin from print
 
@@ -16,10 +18,12 @@ public class Map  {
     //harta in format informatie
     private final int mapNr;
     private DataBaseHandler dataBaseHandler;
+    private LinkedList<Observer> observers;
     //indicele hartii
 
 
     private Map(int mapNumber) {
+        this.observers=new LinkedList<>();
         this.dataBaseHandler = new DataBaseHandler();
         dataBaseHandler.createDBMap();
         this.mapNr = mapNumber;
@@ -41,9 +45,10 @@ public class Map  {
 
     }
 
-    public static void setMap( )
+    public static void setMap( )//todo map3
     {
         currentMap = map2;
+        map2.observers = map1.observers;
     }
 
     public int getMapNr()
@@ -159,4 +164,21 @@ public class Map  {
     }
 
 
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer: observers)
+        {
+            observer.update();
+        }
+    }
 }

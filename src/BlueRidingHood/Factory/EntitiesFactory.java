@@ -1,18 +1,22 @@
-package BlueRidingHood.Entities;
+package BlueRidingHood.Factory;
 
-import BlueRidingHood.Entities.BasicEntity.*;
+import BlueRidingHood.Entities.BasicEnemieEntities.*;
+import BlueRidingHood.Entities.EnemieEntity;
+import BlueRidingHood.Entities.Player;
 import BlueRidingHood.Map.Map;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class EntitiesFactory {
 
     private static final int maxEntityNumberPerMap=4;
     private static EntitiesFactory entitiesFactory=null;
-
+    protected Player player = Player.getPlayer();
+    //todo map observer
     public static EntitiesFactory getEntitiesFactory()
     {
         if(entitiesFactory == null)
@@ -27,10 +31,10 @@ public class EntitiesFactory {
     protected EntitiesFactory()
     {}
 
-    public Vector<EnemieEntity> produceMapEntities()
+    public CopyOnWriteArrayList<EnemieEntity> produceMapEntities()
     {
         //todo entities coords altfel
-        Vector<EnemieEntity> result = new Vector<>(maxEntityNumberPerMap);
+        CopyOnWriteArrayList<EnemieEntity> result = new CopyOnWriteArrayList<>();
         LinkedList<Integer> availablePositions = Map.getCurrentMap().getAllAvailablePositions(15);
         int mapNr= Map.getCurrentMap().getMapNr();
         int length = availablePositions.size();
@@ -54,22 +58,30 @@ public class EntitiesFactory {
                 {
                     if(i<maxEntityNumberPerMap/2)
                     {
-                        result.add(new Fox1(x,y));
+                        Fox1 fox1 = new Fox1(x,y);
+                        result.add(fox1);
+                        player.attach(fox1);
                     }
                     else
                     {
-                        result.add(new Fox2(x,y));
+                        Fox2 fox2 = new Fox2(x,y);
+                        result.add(fox2);
+                        player.attach(fox2);
                     }
                 }
                 else
                 {
                     if(i<maxEntityNumberPerMap/2)
                     {
-                        result.add(new Bear1(x,y));
+                        Bear1 bear1 = new Bear1(x,y);
+                        result.add(bear1);
+                        player.attach(bear1);
                     }
                     else
                     {
-                        result.add(new Bear2(x,y));
+                        Bear2 bear2 = new Bear2(x,y);
+                        result.add(bear2);
+                        player.attach(bear2);
                     }
                 }
             }

@@ -1,6 +1,6 @@
 package BlueRidingHood.Entities;
 
-import BlueRidingHood.Graphics.Animation.Animation;
+import BlueRidingHood.Animation.Animation;
 import BlueRidingHood.Graphics.Tile;
 
 import java.awt.*;

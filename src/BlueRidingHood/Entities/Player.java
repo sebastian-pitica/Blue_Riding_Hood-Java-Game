@@ -1,30 +1,35 @@
 package BlueRidingHood.Entities;
 
 import BlueRidingHood.Game.Sign;
-import BlueRidingHood.Graphics.Animation.Animation;
-import BlueRidingHood.Graphics.Assets;
+import BlueRidingHood.Game.StateTypes;
 import BlueRidingHood.Graphics.Tile;
 import BlueRidingHood.Map.Map;
+import BlueRidingHood.Observer.Observer;
+import BlueRidingHood.Observer.Subject;
+import BlueRidingHood.State.State;
+
+import java.util.LinkedList;
 
 import static BlueRidingHood.Map.Map.getCurrentMap;
+import static BlueRidingHood.State.ShieldOFF.getShieldOFF;
+import static BlueRidingHood.State.ShieldON.getShieldON;
 
-public class Player extends Entity{ //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
+public class Player extends Entity implements Subject { //todo add other atributes, methods ex:hit counter, life counter, alte constrangeri de timp
     //todo counter monede, scor
     //todo check singleton
     //todo score rulles
-
+    //todo score pentru playerhit -, enemie killed+, coin +
     private static Player player = null;
     private static boolean positionChanged;
     private final int speed = 6;
     public int stepSize = 2;
     public int score = 0; //viteza jucatorului, marimea unui pas
     public boolean shieldActive, attackActive; //todo add other flags
+    protected int oldMatrixX, oldMatrixY;
+    protected LinkedList<Observer> observers;
+    protected State currentState;
 
-    public Animation leftStand, rightStand, leftRun, rightRun;
-    public Animation leftDrawSword, rightDrawSword,rightRetractSword, leftRetractSword, leftAttack, rightAttack;
 
-    public Animation leftShieldStand, rightShieldStand, leftShieldRun, rightShieldRun;
-    public Animation leftShieldDrawSword, rightShieldDrawSword,rightShieldRetractSword, leftShieldRetractSword, leftShieldAttack, rightShieldAttack;
 
     public void addPointsToScore(int amount)
     {
@@ -36,11 +41,12 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         this.attackPower = 1;
         this.alive = true;
         this.attackResistence = 15;
-        this.matrixX = 0;
-        this.matrixY = Map.getCurrentMap().startY();
+        this.matrixX = oldMatrixX = 0;
+        this.matrixY = oldMatrixY = Map.getCurrentMap().startY();
         this.xCoord = 0;
         this.yCoord = Map.getCurrentMap().startY()* Tile.TILE_HEIGHT;
         shieldActive = attackActive =  false;
+        observers = new LinkedList<>();
         animationInit();
     }
 
@@ -77,7 +83,7 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         }
     }
 
-    public void isKilled()
+    public void isKilled()//todo other actions
     {
         alive = false;
     }
@@ -124,36 +130,20 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
     public void displayPlayerDetails()
     //afiseaza pozitia jcuatorului in coordonate x, y si in coordonate matriceale
     {
-       System.out.print("\n\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
-        System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
-                "CloseAttackPower: "+ attackPower +", Speed: "+stepSize+"\n"
-            +"Score: "+score+"\n");
+      System.out.print("\n\nx: "+xCoord+", y: "+yCoord+"\nmatrixXCoord: "+matrixX+", matrixYCoord: "+matrixY+"\n");
+       System.out.print("Resistence: "+attackResistence+", HitCounter: "+hitCounter+"\n"+
+               "CloseAttackPower: "+ attackPower +", Speed: "+stepSize+"\n"
+               +"Score: "+score+"\n");
 
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     private void animationInit()
     {
-        leftStand = new Animation(speed, Assets.playerLeftStand);
-        rightStand = new Animation(speed, Assets.playerRightStand);
-        leftRun = new Animation(speed, Assets.playerLeftRun);
-        rightRun = new Animation(speed, Assets.playerRightRun);
-        leftDrawSword = new Animation(speed, Assets.playerLeftDrawSword);
-        rightDrawSword = new Animation(speed,Assets.playerRightDrawSword);
-        rightRetractSword = new Animation(speed, Assets.playerRightRetractSword);
-        leftRetractSword = new Animation(speed,Assets.playerLeftRetractSword);
-        leftAttack = new Animation(speed, Assets.playerLeftAttack);
-        rightAttack = new Animation(speed, Assets.playerRightAttack);
 
-        leftShieldStand = new Animation(speed, Assets.playerLeftShieldStand);
-        rightShieldStand = new Animation(speed, Assets.playerRightShieldStand);
-        leftShieldRun = new Animation(speed, Assets.playerLeftShieldRun);
-        rightShieldRun = new Animation(speed, Assets.playerRightShieldRun);
-        leftShieldDrawSword = new Animation(speed, Assets.playerLeftShieldDrawSword);
-        rightShieldDrawSword = new Animation(speed,Assets.playerRightShieldDrawSword);
-        rightShieldRetractSword = new Animation(speed, Assets.playerRightShieldRetractSword);
-        leftShieldRetractSword = new Animation(speed,Assets.playerLeftShieldRetractSword);
-        leftShieldAttack = new Animation(speed, Assets.playerLeftShieldAttack);
-        rightShieldAttack = new Animation(speed, Assets.playerRightShieldAttack);
 
     }
 
@@ -251,7 +241,36 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
             resetPlayerPosition();
 
         }
+
+        if(player.wasPositionChanged())
+        {
+            Player.setPositionChanged();
+            notifyObservers();
+        }
+        else
+        {
+            Player.unsetPositionChanged();
+        }
+
         //todo other interactions
+    }
+
+    public boolean wasPositionChanged()
+    {
+        boolean result = false;
+
+        if(matrixY!=oldMatrixY)
+        {
+            oldMatrixY = matrixY;
+            result = true;
+        }
+        if(matrixX!=oldMatrixX)
+        {
+            oldMatrixX = matrixX;
+            result = true;
+        }
+
+        return result;
     }
 
     private void resetPlayerPosition()
@@ -259,6 +278,54 @@ public class Player extends Entity{ //todo add other atributes, methods ex:hit c
         player.yCoord= getCurrentMap().startY()*Tile.TILE_HEIGHT;
         player.xCoord=0;
         player.updatePositionInMatrix();
+    }
+
+    @Override
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void detach(Observer observer) {
+        try {
+            observers.remove(observer);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer :observers)
+        {
+            observer.update();
+        }
+    }
+
+    public void setCurrentState(StateTypes state)
+    {
+        switch (state)
+        {
+            case SHIELDON -> {
+                currentState = getShieldON();
+            }
+            case SHIELDOFF -> {
+                currentState = getShieldOFF();
+            }
+
+        }
+
+    }
+
+    public void setCurrentState(State state)
+    {
+       currentState = state;
+    }
+
+    public State getCurrentState() {
+        return currentState;
     }
 
 }

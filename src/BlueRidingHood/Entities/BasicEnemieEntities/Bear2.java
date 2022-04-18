@@ -1,7 +1,7 @@
-package BlueRidingHood.Entities.BasicEntity;
+package BlueRidingHood.Entities.BasicEnemieEntities;
 
+import BlueRidingHood.Animation.Animation;
 import BlueRidingHood.Entities.EnemieEntity;
-import BlueRidingHood.Graphics.Animation.Animation;
 import BlueRidingHood.Graphics.Assets;
 import BlueRidingHood.Graphics.Tile;
 
@@ -32,6 +32,10 @@ public class Bear2 extends EnemieEntity {
     @Override
     public void isHit() {
         hitCounter++;
+        if(hitCounter>attackResistence)
+        {
+            alive=false;
+        }
     }
 
     @Override

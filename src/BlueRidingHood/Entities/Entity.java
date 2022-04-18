@@ -6,8 +6,11 @@ import BlueRidingHood.Graphics.Tile;
 import static BlueRidingHood.Map.Map.getCurrentMap;
 
 public abstract class Entity {//todo ce detine fiecare entitate
-    protected int attackPower=1, attackResistence, hitCounter=0, stepSize=2;
-    public int matrixX,matrixY,xCoord,yCoord;  //cordonatele carteziene si matriceale ale entitatii
+    protected int attackPower=1, attackResistence, hitCounter=0, stepSize=1;
+    protected int matrixX;
+    protected int matrixY;
+    protected int xCoord;
+    protected int yCoord;  //cordonatele carteziene si matriceale ale entitatii
     protected boolean alive=false;
 
 
@@ -98,7 +101,37 @@ public abstract class Entity {//todo ce detine fiecare entitate
     public abstract void isHit();
     public abstract boolean alive();
 
+    public int getyCoord() {
+        return yCoord;
+    }
 
+    public int getxCoord() {
+        return xCoord;
+    }
+
+    public int getMatrixX() {
+        return matrixX;
+    }
+
+    public int getMatrixY() {
+        return matrixY;
+    }
+
+    public void setMatrixX(int matrixX) {
+        this.matrixX = matrixX;
+    }
+
+    public void setMatrixY(int matrixY) {
+        this.matrixY = matrixY;
+    }
+
+    public void setxCoord(int xCoord) {
+        this.xCoord = xCoord;
+    }
+
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
 }
 
 

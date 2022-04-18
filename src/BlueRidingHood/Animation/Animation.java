@@ -1,4 +1,4 @@
-package BlueRidingHood.Graphics.Animation;
+package BlueRidingHood.Animation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
