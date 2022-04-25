@@ -6,179 +6,213 @@ import BlueRidingHood.Observer.Subject;
 
 import java.util.LinkedList;
 
+/*! \class Map
+    \brief Implementeză harta și operațiile cu harta.
+
+    Oferă metode pentru:\n
+        -setarea/preluarea hărții curente.\n
+        -preluarea identificatorului hărții curente.\n
+        -preluarea matricii hărții curente.\n
+        -preluarea pozițiilor disponibile pentru deplasare/creare de entități.\n
+        -verificarea posibilității de a avansa pe o anumită poziție.\n
+        -verificarea existenței unui element cu ucidere instantă pe o anumită poziție.\n
+        -preluarea cordonatei y de început/sfărșit (cordonata x este mereu aceeași).
+
+    \note Implementează design patternul **Observer**.
+ */
+
 public class Map implements Subject {
-    //todo pozitie player, pozitie inamici, check, return, etc
-    //todo remove coin from print
 
-    private static final Map map1 = new Map(1);
-    private static final Map map2 = new Map(2);
-    private static Map currentMap = map1; //valoarea de inceput
-    //harta curenta
-    private final int[][] matrix;
-    //harta in format informatie
-    private final int mapNr;
-    private DataBaseHandler dataBaseHandler;
-    private LinkedList<Observer> observers;
-    //indicele hartii
+    private static final Map map1 = new Map(1); /*!< Referință unică către prima hartă.*/
+    private static final Map map2 = new Map(2);/*!< Referință unică către a doua hartă.*/
+    private static final Map map3 = new Map(3);/*!< Referință unică către a treia hartă.*/
+    private static Map currentMap; /*!< Referință către harta curentă.*/
+    private static LinkedList<Observer> observers; /*!< Lista cu observatori.*/
+    private final int mapNr; /*!< Indetificatorul hărții.*/
+    private int[][] matrix; /*!< Matricea hărții.*/
+    private final DataBaseHandler dataBaseHandler; /*!< Referință către managerul bazei de date.*/
+    private LinkedList<Integer> allAvailablePositions = null; /*!< Lista cu pozițiile disponibile pentru creare entităților.*/
 
-
+    /*! \fn  private Map(int mapNumber)
+        \brief Constructorul clasei Map.
+        \param mapNumber indicele hărții curente.
+        Inițializează referințele și variablilele locale.\n
+   */
     private Map(int mapNumber) {
-        this.observers=new LinkedList<>();
-        this.dataBaseHandler = new DataBaseHandler();
+        this.dataBaseHandler = DataBaseHandler.getDataBaseHandler();
         dataBaseHandler.createDBMap();
         this.mapNr = mapNumber;
-        if(mapNumber ==1) {
-            this.matrix = dataBaseHandler.getMap1();
+        switch (mapNumber) {
+            case 1 -> {
+                observers = new LinkedList<>();
+                this.matrix = dataBaseHandler.getMap(1);
+            }
+
+            case 2 -> this.matrix = dataBaseHandler.getMap(2);
+
+
+            case 3 -> this.matrix = dataBaseHandler.getMap(3);
         }
-        else
-        {
-            this.matrix = dataBaseHandler.getMap2();
+
+    }
+
+    /*! \fn public static void resetMap()
+        \brief Resetează harta curentă și lista de observatori.
+    */
+    public static void resetMap() {
+        observers = new LinkedList<>();
+        currentMap = map1;
+    }
+
+    /*! \fn public static void setMap(int mapNr)
+        \brief Setează harta curentă la cea specificată prin indice.
+        \param mapNr indicele hărții
+    */
+    public static void setMap(int mapNr) {
+        switch (mapNr) {
+            case 2 -> currentMap = map2;
+            case 3 -> currentMap = map3;
         }
-
-        //legenda elemente matrice
-        //1=deplasabil
-        //0=nedeplasabil
-        //3=instant death
-        //2=pozitia jucatorului //todo
-        //4=poztiei inamici //todo
-        //5=pozitie monede //todo
-
     }
 
-    public static void setMap( )//todo map3
-    {
-        currentMap = map2;
-        map2.observers = map1.observers;
-    }
-
-    public int getMapNr()
-    {
-        return currentMap.mapNr;
-    }
-
-    public static Map getCurrentMap()
-    {
+    /*! \fn public static Map getCurrentMap()
+        \brief Returnează referința la harta curentă.
+    */
+    public static Map getCurrentMap() {
+        if (currentMap == null)
+            currentMap = map1;
         return currentMap;
     }
 
-    public int[][] getMatrix()
-    {
+    /*! \fn public int getMapNr()
+       \brief Returnează identificatorul hărții.
+    */
+    public int getMapNr() {
+        return currentMap.mapNr;
+    }
+
+    /*! \fn public int[][] getMatrix()
+       \brief Returnează matricea hărții.
+    */
+    public int[][] getMatrix() {
         return matrix;
     }
 
-    public LinkedList<Integer> getAllAvailablePositions()
-    {
-        LinkedList<Integer> result = new LinkedList<>();
+    /*! \fn public LinkedList<Integer> getAllAvailablePositions()
+       \brief Obține și returnează pozițiile disponibile pentru crearea entităților.
 
-        for(int i=0;i<16;++i)
-        {
-            for(int j=0;j<30;++j)
-            {
-                if(matrix[i][j]==1) {
-                    result.add(i*100+j);
+       Dacă pozițiile au fost deja calculate returnează referința la lista respectivă.
+    */
+    public LinkedList<Integer> getAllAvailablePositions() {
+        if (allAvailablePositions == null) {
+            allAvailablePositions = new LinkedList<>();
+
+            for (int i = 0; i < 16; ++i) {
+                for (int j = 0; j < 30; ++j) {
+                    if (matrix[i][j] == 1) {
+                        allAvailablePositions.add(i * 100 + j);
+                    }
                 }
             }
         }
-        return result;
+
+        return allAvailablePositions;
     }
 
-    public LinkedList<Integer> getAllAvailablePositions(int limit)
-    {
-        LinkedList<Integer> result = new LinkedList<>();
+    /*! \fn  public boolean canAdvance(int x, int y)
+       \brief Returnează dacă pe poziția matriceală x,y se poate înainta.
 
-        for(int i=0;i<16;++i)
-        {
-            for(int j=limit;j<30;++j)
-            {
-                if(matrix[i][j]==1) {
-                    result.add(i*100+j);
-                }
-            }
-        }
-        return result;
-    }
-
+    */
     public boolean canAdvance(int x, int y)
-        //functie ce returneaza daca pe pozitia matriceala x,y se poate inainta
-        //y de pe ecran in matrice este indicele pentru rand
-        //x de pe ecran in matrice este indicele pentru coloana
+    //y de pe ecran in matrice este indicele pentru rand
+    //x de pe ecran in matrice este indicele pentru coloana
     {
-        if(y>=0 && x >=0) {
-            int testValue = matrix[y][x];
-            return matrix[y][x] == 1 || matrix[y][x]==3;
-        }
-        else
+        if (y >= 0 && x >= 0) {
+            return matrix[y][x] == 1 || matrix[y][x] == 3;
+        } else
             return false;
 
     }
 
+    /*! \fn   public boolean canKill(int x, int y)
+       \brief Returnează dacă pe poziția matriceală x,y se află un element ce va ucide jucătorul.
+       \param x coordonata matriceală x.
+       \param y coordonata matriceală y.
+    */
     public boolean canKill(int x, int y)
-        //functie ce ofera returneaza daca pe pozitia matriceala x,y se afla un element de instant death
-        //y de pe ecran in matrice este indicele pentru rand
-        //x de pe ecran in matrice este indicele pentru coloana
+    //y de pe ecran in matrice este indicele pentru rand
+    //x de pe ecran in matrice este indicele pentru coloana
     {
         return matrix[y][x] == 3;
     }
 
+    /*! \fn   public boolean end(int x, int y)
+       \brief Returnează dacă pe poziția matriceală x,y se află finalul hărții.
+        \param x coordonata matriceală x.
+       \param y coordonata matriceală y.
+    */
     public boolean end(int x, int y)
-    //functie ce returneaza daca pe pozitia matriceala x,y se afla finalul hartii
     //y de pe ecran in matrice este indicele pentru rand
     //x de pe ecran in matrice este indicele pentru coloana
     {
-        if(y>=0 && x >=0) {
-            boolean testValue = y==endY() && x==29;
-            return y==endY() && x==29;
-        }
-        else
+        if (y >= 0 && x >= 0) {
+            return y == endY() && x == 29;
+        } else
             return false;
 
     }
 
+    /*! \fn public int startY()
+       \brief Furnizează poziția, de start, matriceală a lui y.
+    */
     public int startY()
-    //functie ce furnizeaza pozitia, de start, matriceala a lui y, in functi de harata
     {
-        if(mapNr == 1)
-        {
+        if (mapNr == 1) {
             return 10;
+        } else {
+            if (mapNr == 2) {
+                return 8;
+            } else {
+                return 6;
+            }
         }
-        else
-        {
-            return 8;
-        }
-
     }
 
 
+    /*! \fn   public int endY()
+       \brief Furnizează poziția, de final, matriceală a lui y.
+
+    */
     public int endY()
-        //functie ce furnizeaza pozitia, de final, matriceala a lui y, in functi de harata
     {
-        if(mapNr == 1)
-        {
+        if (mapNr == 1) {
             return 14;
-        }
-        else
-        {
-            return 12;
+        } else {
+            if (mapNr == 2) {
+                return 12;
+            } else {
+                return -1;
+            }
         }
 
     }
 
-
+    /*! \fn   public void attach(Observer observer)
+     \brief Atașează observatorul dat.
+     \param observer observatorul de atașat.
+    */
     @Override
     public void attach(Observer observer) {
         observers.add(observer);
     }
 
-    @Override
-    public void detach(Observer observer) {
-        observers.remove(observer);
-    }
-
+    /*! \fn    public void notifyObservers()
+    \brief Notifică lista de observatori.
+   */
     @Override
     public void notifyObservers() {
-        for(Observer observer: observers)
-        {
-            observer.update();
+        for (Observer observer : observers) {
+            observer.updateObserver();
         }
     }
 }

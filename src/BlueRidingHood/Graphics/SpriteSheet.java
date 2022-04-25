@@ -2,37 +2,34 @@ package BlueRidingHood.Graphics;
 
 import java.awt.image.BufferedImage;
 
-/*! \class public class SpriteSheet
-    \brief Clasa retine o referinta catre o imagine formata din dale (sprite sheet)
+/*! \class SpriteSheet
+    \brief Referință către o imagine formată din dale (sprite sheet).
 
-    Metoda crop() returneaza o dala de dimensiuni fixe (o subimagine) din sprite sheet
-    de la adresa (x * latimeDala, y * inaltimeDala)
+    Oferă metode pentru:\n
+        -returnarea unei subimagini.
  */
 public class SpriteSheet {
-    private final BufferedImage spriteSheet;              /*!< Referinta catre obiectul BufferedImage ce contine sprite sheet-ul.*/
+    private final BufferedImage spriteSheet;  /*!< Referință către obiectul BufferedImage ce conține sprite sheet-ul.*/
 
     /*! \fn public SpriteSheet(BufferedImage sheet)
-        \brief Constructor, initializeaza spriteSheet.
-
-        \param img Un obiect BufferedImage valid.
+        \brief Constructor, inițializează spriteSheet.
+        \param img un obiect BufferedImage valid.
      */
     public SpriteSheet(BufferedImage buffImg) {
-        /// Retine referinta catre BufferedImage object.
         spriteSheet = buffImg;
     }
 
-    /*! \fn public BufferedImage crop(int x, int y)
-        \brief Returneaza un obiect BufferedImage ce contine o subimage (dala).
+    /*! \fn public BufferedImage crop(int x, int y, int tileWidth, int tileHeight)
+        \brief Returnează un obiect BufferedImage ce conține o subimage (dală).
 
         Subimaginea este localizata avand ca referinta punctul din stanga sus.
 
-        \param x numarul dalei din sprite sheet pe axa x.
-        \param y numarul dalei din sprite sheet pe axa y.
+        \param x numărul dalei din sprite sheet pe axa x.
+        \param y numărul dalei din sprite sheet pe axa y.
+        \param tileWidth lățimea dalei.
+        \param tileHeight înălțimea dalei.
      */
-    public BufferedImage crop(int x, int y, int tileWidth,int tileHeight ) {
-        /// Subimaginea (dala) este regasita in sprite sheet specificad coltul stanga sus
-        /// al imaginii si apoi latimea si inaltimea (totul in pixeli). Coltul din stanga sus al imaginii
-        /// se obtine inmultind numarul de ordine al dalei cu dimensiunea in pixeli a unei dale.
+    public BufferedImage crop(int x, int y, int tileWidth, int tileHeight) {
         return spriteSheet.getSubimage(x * tileWidth, y * tileHeight, tileWidth, tileHeight);
     }
 }

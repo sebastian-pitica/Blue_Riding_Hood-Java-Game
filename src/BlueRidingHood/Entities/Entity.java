@@ -1,136 +1,132 @@
 package BlueRidingHood.Entities;
 
-import BlueRidingHood.Game.Sign;
+import BlueRidingHood.Game.Enums.Sign;
 import BlueRidingHood.Graphics.Tile;
 
 import static BlueRidingHood.Map.Map.getCurrentMap;
 
-public abstract class Entity {//todo ce detine fiecare entitate
-    protected int attackPower=1, attackResistence, hitCounter=0, stepSize=1;
-    protected int matrixX;
-    protected int matrixY;
-    protected int xCoord;
-    protected int yCoord;  //cordonatele carteziene si matriceale ale entitatii
-    protected boolean alive=false;
+/*! \class Entity
+    \brief Interfață pentru toate entitățile.
+
+    Oferă metode pentru:\n
+        -deplasarea pe verticală/orizontală.\n
+        -actualizarea/asigurarea coerenței coordonatelor.\n
+        -lovirea enităților.\n
+        -obținerea coordonatelor matriceale/carteziene.\n
+        -setarea coordonatelor carteziene.
 
 
-    //todo vezi ca close atack e la toate mai putin zawalfo 1 momentan
-   // Entity createEntity();
+    \note Nu se poate implemneta un observer pentru hartă.
+ */
 
+
+public abstract class Entity {
+
+    protected static final int stepSize = 1; /*!< Dimensiunea în pixeli pentru deplasare.*/
+    protected int matrixX; /*!< Coordonata matriceală x.*/
+    protected int matrixY; /*!< Coordonata matriceală y.*/
+    protected int xCoord; /*!< Coordonata x.*/
+    protected int yCoord; /*!< Coordonata y.*/
+    protected boolean alive = false; /*!< Marchează dacă entitatea traiește.*/
+
+    /*! \fn  public void stepVertical(Sign sign)
+      \brief Actualizează poziția entității atunci când se deplasează pe vertical.
+      \param sign semnul pentru deplasare.
+   */
     public void stepVertical(Sign sign)
-    //functie de actualizare a pozitiei jucatorului atunci cand se deplaseaza pe vertical
-    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput/final de matrice
     {
         updatePositionInMatrix();
-        if(sign== Sign.plus) { //deplasare in jos
-            boolean test =  getCurrentMap().canAdvance(matrixX, matrixY + 1);
-            if (test) {
+        if (sign == Sign.PLUS) { //deplasare in jos
+            if (getCurrentMap().canAdvance(matrixX, matrixY + 1) || yCoord < matrixY * Tile.TILE_HEIGHT) {
                 yCoord += stepSize;
             }
-            else
-            {   //corectie deplasare in jos
-                //cat timp coordonata actuala y e mai mica ca cea ideala
-                if(yCoord<matrixY* Tile.TILE_HEIGHT)
-                {
-                    yCoord += stepSize;
-                }
-            }
 
-        }
-        else { //deplasare in sus
-            boolean test =  getCurrentMap().canAdvance(matrixX, matrixY - 1);
-            if (test) {
+        } else { //deplasare in sus
+            if (getCurrentMap().canAdvance(matrixX, matrixY - 1) || yCoord > matrixY * Tile.TILE_HEIGHT) {
                 yCoord -= stepSize;
             }
-            else
-            {   //corectie deplasare in sus
-                //cat timp coordonata actuala y e mai mare decat cea ideala
-                if(yCoord>matrixY*Tile.TILE_HEIGHT)
-                {
-                    yCoord -= stepSize;
-                }
-            }
         }
         updatePositionInMatrix();
     }
 
+    /*! \fn  public void stepHorizontal(Sign sign)
+      \brief Actualizează poziția entității atunci când se deplasează pe orizontal.
+      \param sign semnul pentru deplasare.
+   */
     public void stepHorizontal(Sign sign)
-    //functie de actualizare a pozitiei jucatorului atunci cand se deplaseaza pe vertical
-    //todo cazuri exceptionale cand esti lanaga pozitie de 3 sau cand esti la inceput/final de matrice
     {
         updatePositionInMatrix();
-        if(sign== Sign.plus) //deplasare la dreapta
+        if (sign == Sign.PLUS) //deplasare la dreapta
         {
-            boolean test =  getCurrentMap().canAdvance(matrixX+1, matrixY);
-            if (test) {
-                xCoord += stepSize;}
-            else
-            {
-                //corectie deplasare la dreapta
-                //cat timp pozitia reala pe x este mai mica decat cea ideala
-                if(xCoord<matrixX*Tile.TILE_HEIGHT)
-                {
-                    xCoord += stepSize;
-                }
+            if (getCurrentMap().canAdvance(matrixX + 1, matrixY) || xCoord < matrixX * Tile.TILE_HEIGHT) {
+                xCoord += stepSize;
             }
-        }
-        else
-        {//deplasare la stanga
-            boolean test =  getCurrentMap().canAdvance(matrixX-1, matrixY);
-            if (test) {
-                xCoord -= stepSize;}
-            else
-            {
-                //corectie deplasare la stanga
-                //cat timp pozitia reala pe x este mai marre de cea ideala
-                if(xCoord>matrixX*Tile.TILE_HEIGHT)
-                {
-                    xCoord -= stepSize;
-                }
+        } else {//deplasare la stanga
+            if (getCurrentMap().canAdvance(matrixX - 1, matrixY) || xCoord > matrixX * Tile.TILE_HEIGHT) {
+                xCoord -= stepSize;
             }
+
         }
         updatePositionInMatrix();
     }
 
-    public void updatePositionInMatrix()
-    {
-        matrixX = (xCoord+ Tile.TILE_HEIGHT/2) / Tile.TILE_HEIGHT;
-        matrixY = (yCoord+Tile.TILE_HEIGHT/2) / Tile.TILE_HEIGHT;
+    /*! \fn  public void updatePositionInMatrix()
+      \brief Asigură coerența între seturile de coordonate ale entității.
+   */
+    public void updatePositionInMatrix() {
+        matrixX = (xCoord + Tile.TILE_HEIGHT / 2) / Tile.TILE_HEIGHT;
+        matrixY = (yCoord + Tile.TILE_HEIGHT / 2) / Tile.TILE_HEIGHT;
     }
 
-    public abstract void isHit();
-    public abstract boolean alive();
+    /*! \fn  public void hit(int hitPower)
+       \brief Incrementează contorul de lovituri cu valoarea primită.
+    */
+    public abstract void hit(int hitPower);
 
+    /*! \fn   public int getyCoord()
+       \brief Returnează coordonata y.
+    */
     public int getyCoord() {
         return yCoord;
     }
 
+    /*! \fn  public void setyCoord(int yCoord)
+       \brief Setează coordonata y.
+       \param yCoord noua valoare a coordonatei y.
+    */
+    public void setyCoord(int yCoord) {
+        this.yCoord = yCoord;
+    }
+
+    /*! \fn   public int getxCoord()
+       \brief Returnează coordonata x.
+    */
     public int getxCoord() {
         return xCoord;
     }
 
-    public int getMatrixX() {
-        return matrixX;
-    }
-
-    public int getMatrixY() {
-        return matrixY;
-    }
-
-    public void setMatrixX(int matrixX) {
-        this.matrixX = matrixX;
-    }
-
-    public void setMatrixY(int matrixY) {
-        this.matrixY = matrixY;
-    }
-
+    /*! \fn  public void setxCoord(int xCoord)
+      \brief Setează coordonata x.
+      \param xCoord noua valoare a coordonatei x.
+   */
     public void setxCoord(int xCoord) {
         this.xCoord = xCoord;
     }
 
-    public void setyCoord(int yCoord) {
-        this.yCoord = yCoord;
+    /*! \fn   public int getMatrixX()
+       \brief Returnează coordonata x matriceală.
+    */
+    public int getMatrixX() {
+
+        return matrixX;
+
+    }
+
+    /*! \fn   public int getMatrixY()
+       \brief Returnează coordonata y matriceală.
+    */
+    public int getMatrixY() {
+        return matrixY;
     }
 }
 

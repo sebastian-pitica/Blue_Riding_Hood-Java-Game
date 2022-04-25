@@ -5,26 +5,23 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-/*! \class public class ImageLoader
-    \brief Clasa ce contine o metoda statica pentru incarcarea unei imagini in memorie.
+/*! \class ImageLoader
+    \brief Încarcă o imagine din memorie.
+
+    Oferă metode pentru:\n
+        -încărcarea unei imagini din memorie.
  */
 public class ImageLoader {
-    /*! \fn  public static BufferedImage loadImage(String path)
-        \brief Incarca o imagine intr-un obiect BufferedImage si returneaza o referinta catre acesta.
 
-        \param path Calea relativa pentru localizarea fisierul imagine.
+    /*! \fn   public static BufferedImage LoadImage(String path)
+        \brief Returnează o referință către o imagine pe care o încarcă.
+
+        \param path Calea relativă pentru localizarea fișierul imagine.
      */
     public static BufferedImage LoadImage(String path) {
-        /// Avand in vedere exista situatii in care fisierul sursa sa nu poate fi accesat
-        /// metoda read() arunca o excpetie ce trebuie tratata
         try {
-            /// Clasa ImageIO contine o serie de metode statice pentru file IO.
-            /// Metoda read() are ca argument un InputStream construit avand ca referinta
-            /// directorul res, director declarat ca director de resurse in care se gasesc resursele
-            /// proiectului sub forma de fisiere sursa.
             return ImageIO.read(Objects.requireNonNull(ImageLoader.class.getResource(path)));
         } catch (IOException e) {
-            /// Afiseaza informatiile necesare depanarii.
             e.printStackTrace();
         }
         return null;

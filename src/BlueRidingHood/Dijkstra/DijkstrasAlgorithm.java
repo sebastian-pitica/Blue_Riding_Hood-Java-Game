@@ -4,15 +4,25 @@ import java.util.LinkedList;
 
 import static BlueRidingHood.Dijkstra.Node.pathNodes;
 
+/*! \class DijkstrasAlgorithm
+    \brief Algoritmul lui Dijkstras.
+
+    Funcționează împreună cu clasa Node.
+    \note Sursa https://www.geeksforgeeks.org/printing-paths-dijkstras-shortest-path-algorithm/\n
+           Modificat după nevoie.
+ */
+
 public class DijkstrasAlgorithm {
 
-    private static final int NO_PARENT = -1;
+    private static final boolean print = false; /*!< Controlează afișările specifice clasei.*/
+    private static final int NO_PARENT = -1; /*!< Valoarea pentru nici un părinte al nodului.*/
 
-    // Function that implements Dijkstra's
-    // single source shortest path
-    // algorithm for a graph represented
-    // using adjacency matrix
-    // representation
+     /*! \fn public static void dijkstra(int[][] adjacencyMatrix, int startVertex, int endVertex)
+           \brief Implementează algoritmul lui Dijkstras.
+           \param adjacencyMatrix matricea de adiacență a grafului.
+           \param startVertex nodul de început.
+           \param endVertex nodul de sfârșit.
+    */
     public static void dijkstra(int[][] adjacencyMatrix, int startVertex, int endVertex) {
         int nVertices = adjacencyMatrix[0].length;
         pathNodes = new LinkedList<>();
@@ -82,34 +92,54 @@ public class DijkstrasAlgorithm {
             }
         }
 
-        printAndFormSolution(startVertex, shortestDistances, parents, endVertex); //todo eliminate print
+        formSolution(startVertex, shortestDistances, parents, endVertex);
     }
 
-    // A utility function to print
-    // the constructed distances
-    // array and shortest paths
-    private static void printAndFormSolution(int startVertex, int[] distances, int[] parents, int vertexIndex) {
+    /*! \fn private static void formSolution(int startVertex, int[] distances, int[] parents, int vertexIndex)
+           \brief Formează calea prin noduri.
 
-    //   System.out.print("\n" + startVertex + " -> ");
-      //  System.out.print(vertexIndex + " \t\t ");
-      //  System.out.print(distances[vertexIndex] + "\t\t");
-        printAndFormPath(vertexIndex, parents);
+            Începe afișarea ei dacă este cazul.
+
+    */
+    private static void formSolution(int startVertex, int[] distances, int[] parents, int vertexIndex) {
+
+        if (print)
+            print1(startVertex, distances, vertexIndex);
+
+        formPath(vertexIndex, parents);
 
     }
 
-    // Function to print shortest path
-    // from source to currentVertex
-    // using parents array
-    private static void printAndFormPath(int currentVertex, int[] parents) { //todo eliminate print
+    /*! \fn  private static void formPath(int currentVertex, int[] parents)
+          \brief Formează calea prin noduri.
 
-        // Base case : Source node has
-        // been processed
+          Continuă afișarea ei dacă este cazul.
+   */
+    private static void formPath(int currentVertex, int[] parents) {
         if (currentVertex == NO_PARENT) {
             return;
         }
-        printAndFormPath(parents[currentVertex], parents);
+        formPath(parents[currentVertex], parents);
         pathNodes.add(currentVertex);
 
-        //System.out.print(currentVertex + " ");
+        if (print)
+            print2(currentVertex);
     }
+
+    /*! \fn  private static void print1(int startVertex, int[] distances, int vertexIndex)
+          \brief Funcție de print a nodurilor.
+     */
+    private static void print1(int startVertex, int[] distances, int vertexIndex) {
+        System.out.print("\n" + startVertex + " -> ");
+        System.out.print(vertexIndex + " \t\t ");
+        System.out.print(distances[vertexIndex] + "\t\t");
+    }
+
+    /*! \fn  private static void print2(int currentVertex)
+          \brief Funcție de print a nodurilor.
+     */
+    private static void print2(int currentVertex) {
+        System.out.print(currentVertex + " ");
+    }
+
 }
